@@ -1,0 +1,38 @@
+buildscript {
+	dependencies {
+		classpath "com.jakewharton.gradle:test-distribution-gradle-plugin:$testDistributionVersion"
+		classpath libs.kotlin.gradlePlugin
+	}
+
+	repositories {
+		maven {
+			url "file://${rootDir.absolutePath}/../../../../build/localMaven"
+		}
+		mavenCentral()
+	}
+}
+
+apply plugin: 'org.jetbrains.kotlin.multiplatform'
+apply plugin: 'com.jakewharton.test-distribution'
+
+kotlin {
+	jvm("desktop")
+
+	linuxArm64()
+	linuxX64()
+	macosArm64()
+	macosX64()
+	mingwX64()
+
+	sourceSets {
+		commonTest {
+			dependencies {
+				implementation(libs.kotlin.test)
+			}
+		}
+	}
+}
+
+repositories {
+	mavenCentral()
+}
