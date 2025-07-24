@@ -1,0 +1,132 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
+import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
+
+buildscript {
+	dependencies {
+		classpath libs.kotlin.gradlePlugin
+		classpath libs.dokkaPlugin
+		classpath libs.gradleMavenPublishPlugin
+		classpath libs.spotlessPlugin
+		classpath libs.android.gradlePlugin
+	}
+	repositories {
+		mavenCentral()
+		google()
+	}
+}
+
+apply plugin: 'org.jetbrains.kotlin.jvm'
+apply plugin: 'java-gradle-plugin'
+apply plugin: 'com.vanniktech.maven.publish'
+apply plugin: 'org.jetbrains.dokka'
+apply plugin: 'com.diffplug.spotless'
+apply plugin: 'com.android.lint'
+
+gradlePlugin {
+	plugins {
+		licensee {
+			id = 'com.jakewharton.test-distribution'
+			displayName = 'Test Distribution'
+			description = 'Gradle plugin which creates distributions of JVM unit tests'
+			implementationClass = 'com.jakewharton.testdistribution.TestDistributionPlugin'
+		}
+	}
+}
+
+kotlin {
+	explicitApi()
+
+	abiValidation {
+		enabled = true
+	}
+}
+
+tasks.named('validatePlugins') {
+	enableStricterValidation = true
+}
+
+dependencies {
+	compileOnly gradleApi()
+	compileOnly libs.kotlin.gradlePlugin
+
+	testImplementation libs.junit
+	testImplementation libs.assertk
+	testImplementation libs.testParameterInjector
+	testImplementation gradleTestKit()
+
+	lintChecks libs.androidx.gradlePluginLints
+}
+
+repositories {
+	mavenCentral()
+	google()
+}
+
+tasks.withType(JavaCompile).configureEach { task ->
+	task.sourceCompatibility = '1.8'
+	task.targetCompatibility = '1.8'
+}
+
+tasks.withType(KotlinJvmCompile).configureEach { task ->
+	task.compilerOptions {
+		// Ensure compatibility with old Gradle versions. Keep in sync with TestDistributionPlugin.kt.
+		apiVersion = KotlinVersion.KOTLIN_1_8
+		languageVersion = KotlinVersion.KOTLIN_1_8
+		jvmTarget = JvmTarget.JVM_1_8
+		freeCompilerArgs.add('-Xjdk-release=1.8')
+		freeCompilerArgs.add('-Xjvm-default=all')
+	}
+}
+
+tasks.named('test') {
+	dependsOn(':publishAllPublicationsToTestingRepository')
+	systemProperty('testDistributionVersion', VERSION_NAME)
+	inputs.dir('src/test/fixtures')
+
+	testLogging {
+		if (System.getenv('CI') == 'true') {
+			events = ['failed', 'skipped', 'passed']
+		}
+		exceptionFormat 'full'
+	}
+
+	// Required to test configuration cache in tests when using withDebug()
+	// https://github.com/gradle/gradle/issues/22765#issuecomment-1339427241
+	jvmArgs(
+		"--add-opens",
+		"java.base/java.util=ALL-UNNAMED",
+		"--add-opens",
+		"java.base/java.util.concurrent.atomic=ALL-UNNAMED",
+		"--add-opens",
+		"java.base/java.lang.invoke=ALL-UNNAMED",
+		"--add-opens",
+		"java.base/java.net=ALL-UNNAMED",
+	)
+}
+
+tasks.named('check') { check ->
+	// TODO: https://youtrack.jetbrains.com/issue/KT-78525
+	check.dependsOn(tasks.named('checkLegacyAbi'))
+}
+
+publishing {
+	repositories {
+		maven {
+			name = 'testing'
+			url = "${rootProject.projectDir}/build/localMaven"
+		}
+	}
+}
+
+spotless {
+	kotlin {
+		target('**/*.kt')
+		targetExclude('**/src/test/test-build-logic/build/**', '**/generated-sources/**')
+		ktlint(libs.ktlint.get().version).editorConfigOverride([
+			'ktlint_standard_filename'                : 'disabled',
+			// Making something an expression body should be a choice around readability.
+			'ktlint_standard_function-expression-body': 'disabled',
+		])
+	}
+}
