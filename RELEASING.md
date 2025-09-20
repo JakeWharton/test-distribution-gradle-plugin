@@ -10,6 +10,7 @@
 3. Update the `README.md`:
    1. Change the "Download" section to reflect the new release version.
    2. Change the snapshot section to reflect the next "SNAPSHOT" version, if it is changing.
+   3. Update the compatibility table with the new version and latest Gradle version supported.
 
 4. Commit
 

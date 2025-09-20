@@ -15,7 +15,7 @@ buildscript {
     mavenCentral()
   }
   dependencies {
-    classpath 'com.jakewharton.gradle:test-distribution-gradle-plugin:0.1.0'
+    classpath 'com.jakewharton.gradle:test-distribution-gradle-plugin:0.1.1'
   }
 }
 
@@ -44,6 +44,17 @@ apply plugin: 'com.jakewharton.test-distribution'
 
 </p>
 </details>
+
+### Compatibility
+
+This plugin relies on Gradle internal APIs.
+As such, certain versions of the plugin only work with certain versions of Gradle.
+
+| Gradle       | Plugin        |
+|--------------|---------------|
+| 8.10 - 9.1.0 | 0.1.0 - 0.1.1 |
+
+Gradle versions newer than those listed may be supported, but have not been tested.
 
 
 ## License
