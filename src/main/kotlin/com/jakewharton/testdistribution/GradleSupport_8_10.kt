@@ -3,6 +3,7 @@
 package com.jakewharton.testdistribution
 
 import java.io.File
+import java.nio.file.Files
 import org.gradle.api.file.FileTree
 import org.gradle.api.internal.tasks.testing.TestClassProcessor
 import org.gradle.api.internal.tasks.testing.TestClassRunInfo
@@ -20,7 +21,7 @@ internal class GradleSupport_8_10 : GradleSupport {
 	): List<String> {
 		val detector = JUnitDetector(
 			ClassFileExtractionManager {
-				File.createTempFile("gradle", "test-class-detection").apply {
+				Files.createTempDirectory("test-distribution-gradle-plugin").toFile().apply {
 					deleteOnExit()
 				}
 			},
