@@ -10,7 +10,7 @@ Changed:
 - Nothing yet!
 
 Fixed:
-- Nothing yet!
+- Create a temporary directory (as opposed to a file) for class detection.
 
 
 ## [0.1.0] - 2025-07-24

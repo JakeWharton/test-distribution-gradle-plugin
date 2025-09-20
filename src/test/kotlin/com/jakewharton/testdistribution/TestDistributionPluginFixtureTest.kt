@@ -10,36 +10,59 @@ import org.junit.Test
 
 class TestDistributionPluginFixtureTest {
 	@Test fun pluginKotlinMpp() {
-		val fixtureDir = File(fixturesDir, "plugin-kotlin-mpp")
+		val name = "plugin-kotlin-mpp"
+		val fixtureDir = File(fixturesDir, name)
 		createRunner(fixtureDir, "installJvmTest").build()
 
 		val installDir = fixtureDir.resolve("build/install/jvmTest")
 		assertThat(installDir).isDirectory()
 
-		val binaryFile = installDir.resolve("bin/plugin-kotlin-mpp-test")
-		assertThat(binaryFile.readText()).contains("""org.junit.runner.JUnitCore "com.example.AddTest"""")
+		val binaryFile = installDir.resolve("bin/$name-test")
+		assertThat(binaryFile.readText())
+			.contains("""org.junit.runner.JUnitCore "com.example.AddTest"""")
 
 		val libDir = installDir.resolve("lib")
 		assertThat(libDir.list()).containsAtLeast(
-			"plugin-kotlin-mpp-jvm.jar",
-			"plugin-kotlin-mpp-jvm-tests.jar",
+			"$name-jvm.jar",
+			"$name-jvm-tests.jar",
 		)
 	}
 
 	@Test fun pluginKotlinMppTargetName() {
-		val fixtureDir = File(fixturesDir, "plugin-kotlin-mpp-target-name")
+		val name = "plugin-kotlin-mpp-target-name"
+		val fixtureDir = File(fixturesDir, name)
 		createRunner(fixtureDir, "installDesktopTest").build()
 
 		val installDir = fixtureDir.resolve("build/install/desktopTest")
 		assertThat(installDir).isDirectory()
 
-		val binaryFile = installDir.resolve("bin/plugin-kotlin-mpp-target-name-test")
-		assertThat(binaryFile.readText()).contains("""org.junit.runner.JUnitCore "com.example.AddTest"""")
+		val binaryFile = installDir.resolve("bin/$name-test")
+		assertThat(binaryFile.readText())
+			.contains("""org.junit.runner.JUnitCore "com.example.AddTest"""")
 
 		val libDir = installDir.resolve("lib")
 		assertThat(libDir.list()).containsAtLeast(
-			"plugin-kotlin-mpp-target-name-desktop.jar",
-			"plugin-kotlin-mpp-target-name-desktop-tests.jar",
+			"$name-desktop.jar",
+			"$name-desktop-tests.jar",
+		)
+	}
+
+	@Test fun pluginKotlinMppWithBurst() {
+		val name = "plugin-kotlin-mpp-with-burst"
+		val fixtureDir = File(fixturesDir, name)
+		createRunner(fixtureDir, "installJvmTest").build()
+
+		val installDir = fixtureDir.resolve("build/install/jvmTest")
+		assertThat(installDir).isDirectory()
+
+		val binaryFile = installDir.resolve("bin/$name-test")
+		assertThat(binaryFile.readText())
+			.contains("""org.junit.runner.JUnitCore "com.example.AddTest_Language" "com.example.AddTest_Library"""")
+
+		val libDir = installDir.resolve("lib")
+		assertThat(libDir.list()).containsAtLeast(
+			"$name-jvm.jar",
+			"$name-jvm-tests.jar",
 		)
 	}
 
