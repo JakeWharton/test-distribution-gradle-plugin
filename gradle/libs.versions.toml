@@ -16,4 +16,4 @@ ktlint = "com.pinterest.ktlint:ktlint-cli:1.7.1"
 
 android-gradlePlugin = "com.android.tools.build:gradle:8.13.0"
 androidx-gradlePluginLints = "androidx.lint:lint-gradle:1.0.0-alpha05"
-burst-gradlePlugin = "app.cash.burst:burst-gradle-plugin:2.10.0"
+burst-gradlePlugin = "app.cash.burst:burst-gradle-plugin:2.10.1"
