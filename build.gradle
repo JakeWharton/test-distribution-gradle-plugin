@@ -47,8 +47,8 @@ tasks.named('validatePlugins') {
 }
 
 dependencies {
-	compileOnly gradleApi()
 	compileOnly libs.kotlin.gradlePlugin
+	compileOnly libs.android.gradlePlugin
 
 	testImplementation libs.junit
 	testImplementation libs.assertk
@@ -64,8 +64,8 @@ repositories {
 }
 
 tasks.withType(JavaCompile).configureEach { task ->
-	task.sourceCompatibility = '1.8'
-	task.targetCompatibility = '1.8'
+	task.sourceCompatibility = '11'
+	task.targetCompatibility = '11'
 }
 
 tasks.withType(KotlinJvmCompile).configureEach { task ->
@@ -73,8 +73,8 @@ tasks.withType(KotlinJvmCompile).configureEach { task ->
 		// Ensure compatibility with old Gradle versions. Keep in sync with TestDistributionPlugin.kt.
 		apiVersion = KotlinVersion.KOTLIN_1_8
 		languageVersion = KotlinVersion.KOTLIN_1_8
-		jvmTarget = JvmTarget.JVM_1_8
-		freeCompilerArgs.add('-Xjdk-release=1.8')
+		jvmTarget = JvmTarget.JVM_11
+		freeCompilerArgs.add('-Xjdk-release=11')
 		freeCompilerArgs.add('-Xjvm-default=all')
 	}
 }

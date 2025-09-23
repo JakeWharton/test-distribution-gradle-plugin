@@ -4,7 +4,7 @@
 [Unreleased]: https://github.com/JakeWharton/test-distribution-gradle-plugin/compare/0.1.1...HEAD
 
 Added:
-- Nothing yet!
+- Support for `com.android.library` projects.
 
 Changed:
 - Nothing yet!

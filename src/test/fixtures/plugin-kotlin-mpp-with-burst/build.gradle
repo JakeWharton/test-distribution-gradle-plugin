@@ -34,7 +34,3 @@ kotlin {
 		}
 	}
 }
-
-repositories {
-	mavenCentral()
-}
