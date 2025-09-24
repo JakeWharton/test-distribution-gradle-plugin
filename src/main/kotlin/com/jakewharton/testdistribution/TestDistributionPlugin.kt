@@ -8,6 +8,7 @@ import java.io.File
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.file.RegularFile
+import org.gradle.api.plugins.AppliedPlugin
 import org.gradle.api.plugins.BasePluginExtension
 import org.gradle.api.tasks.Copy
 import org.gradle.api.tasks.application.CreateStartScripts
@@ -42,7 +43,7 @@ public class TestDistributionPlugin : Plugin<Project> {
 			}
 		}
 
-		project.pluginManager.withPlugin("com.android.library") {
+		val androidPluginHandler: (AppliedPlugin) -> Unit = {
 			gotPlugin = true
 
 			val base = project.extensions.getByType(BasePluginExtension::class.java)
@@ -73,17 +74,17 @@ public class TestDistributionPlugin : Plugin<Project> {
 						it.archiveClassifier.set(testName)
 					}
 
-					val testScriptsProvider = project.tasks.register("scripts$nameUpper", CreateStartScripts::class.java) { task ->
-						task.outputDir = project.layout.buildDirectory.dir("scripts/$nameUpper").get().asFile
-						task.applicationName = base.archivesName.get() + "-test"
+					val testScriptsProvider = project.tasks.register("scripts$nameUpper", CreateStartScripts::class.java) {
+						it.outputDir = project.layout.buildDirectory.dir("scripts/$nameUpper").get().asFile
+						it.applicationName = base.archivesName.get() + "-test"
 
 						val classpath = project.objects.fileCollection()
 						classpath.from(testJarProvider.map { it.outputs.files })
 						classpath.from(dummyClassesProvider.flatMap { it.jars })
 
-						task.classpath = classpath
+						it.classpath = classpath
 
-						task.mainClass.set(
+						it.mainClass.set(
 							dummyClassesProvider.flatMap {
 								it.classDirs.zip(it.jars) { classDirs, jars ->
 									val testClasses = project.objects.fileTree()
@@ -128,6 +129,8 @@ public class TestDistributionPlugin : Plugin<Project> {
 				}
 			}
 		}
+		project.pluginManager.withPlugin("com.android.application", androidPluginHandler)
+		project.pluginManager.withPlugin("com.android.library", androidPluginHandler)
 
 		project.pluginManager.withPlugin("org.jetbrains.kotlin.multiplatform") {
 			gotPlugin = true
