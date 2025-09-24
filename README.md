@@ -1,4 +1,4 @@
-# Test Distribution Gradle PLugin
+# Test Distribution Gradle Plugin
 
 A Gradle plugin which creates distributions of JVM unit tests.
 
