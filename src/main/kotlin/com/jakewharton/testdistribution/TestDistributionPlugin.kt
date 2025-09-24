@@ -78,11 +78,9 @@ public class TestDistributionPlugin : Plugin<Project> {
 						it.outputDir = project.layout.buildDirectory.dir("scripts/$nameUpper").get().asFile
 						it.applicationName = base.archivesName.get() + "-test"
 
-						val classpath = project.objects.fileCollection()
-						classpath.from(testJarProvider.map { it.outputs.files })
-						classpath.from(dummyClassesProvider.flatMap { it.jars })
-
-						it.classpath = classpath
+						it.classpath = project.objects.fileCollection()
+							.from(testJarProvider.map { it.outputs.files })
+							.from(dummyClassesProvider.flatMap { it.jars })
 
 						it.mainClass.set(
 							dummyClassesProvider.flatMap {
@@ -162,16 +160,10 @@ public class TestDistributionPlugin : Plugin<Project> {
 					it.outputDir = project.layout.buildDirectory.dir("scripts/$name").get().asFile
 					it.applicationName = base.archivesName.get() + "-test"
 
-					// The classpath property is not lazy, so we need explicit dependencies here.
-					it.dependsOn(mainJarProvider)
-					it.dependsOn(testJarProvider)
-					it.dependsOn(testDependenciesProvider)
-					// However, this 'plus' result will be live, and can still be set at configuration time.
-					@Suppress("EagerGradleConfiguration") // See comments above.
-					val classpath = mainJarProvider.get().outputs.files
-						.plus(testJarProvider.get().outputs.files)
-						.plus(testDependenciesProvider.get())
-					it.classpath = classpath
+					it.classpath = project.objects.fileCollection()
+						.from(mainJarProvider.map { it.outputs.files })
+						.from(testJarProvider.map { it.outputs.files })
+						.from(testDependenciesProvider)
 
 					it.mainClass.set(
 						testClassesProvider.zip(testDependenciesProvider) { testClasses, testDependencies ->
