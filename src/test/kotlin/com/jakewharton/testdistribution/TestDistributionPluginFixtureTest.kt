@@ -9,6 +9,25 @@ import org.gradle.testkit.runner.GradleRunner
 import org.junit.Test
 
 class TestDistributionPluginFixtureTest {
+	@Test fun pluginAndroidApplication() {
+		val name = "plugin-android-application"
+		val fixtureDir = File(fixturesDir, name)
+		createRunner(fixtureDir, "installDebugUnitTest").build()
+
+		val installDir = fixtureDir.resolve("build/install/debugUnitTest")
+		assertThat(installDir).isDirectory()
+
+		val binaryFile = installDir.resolve("bin/$name-test")
+		assertThat(binaryFile.readText())
+			.contains("""org.junit.runner.JUnitCore "com.example.AddTest"""")
+
+		val libDir = installDir.resolve("lib")
+		assertThat(libDir.list()).containsAtLeast(
+			"classes.jar",
+			"$name-debug-unitTest.jar",
+		)
+	}
+
 	@Test fun pluginAndroidLibrary() {
 		val name = "plugin-android-library"
 		val fixtureDir = File(fixturesDir, name)
