@@ -10,7 +10,7 @@ Changed:
 - Nothing yet!
 
 Fixed:
-- Nothing yet!
+- Do not attempt to configure the new Android Kotlin multiplatform Gradle plugin's Kotlin target as if it were a "plain" Kotlin JVM target.
 
 
 ## [0.1.1] - 2025-09-19

@@ -17,7 +17,7 @@ import org.gradle.api.tasks.bundling.Zip
 import org.gradle.util.GradleVersion
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinCompilation.Companion.TEST_COMPILATION_NAME
-import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType
+import org.jetbrains.kotlin.gradle.targets.jvm.KotlinJvmTarget
 
 public class TestDistributionPlugin : Plugin<Project> {
 	override fun apply(project: Project) {
@@ -135,9 +135,7 @@ public class TestDistributionPlugin : Plugin<Project> {
 
 			val base = project.extensions.getByType(BasePluginExtension::class.java)
 			val kotlin = project.extensions.getByType(KotlinMultiplatformExtension::class.java)
-			kotlin.targets.configureEach { target ->
-				if (target.platformType != KotlinPlatformType.jvm) return@configureEach
-
+			kotlin.targets.withType(KotlinJvmTarget::class.java).configureEach { target ->
 				val name = target.name + "Test"
 				val nameUpper = name.replaceFirstChar(Char::uppercase)
 
@@ -146,8 +144,7 @@ public class TestDistributionPlugin : Plugin<Project> {
 				val testCompilation = target.compilations.named(TEST_COMPILATION_NAME)
 				val testClassesProvider = testCompilation.map { it.output.allOutputs }
 				val testDependenciesProvider = testCompilation.map {
-					it.runtimeDependencyFiles?.filter(File::isFile)
-						?: project.files()
+					it.runtimeDependencyFiles.filter(File::isFile)
 				}
 
 				val testJarProvider = project.tasks.register("jar$nameUpper", Jar::class.java) {
