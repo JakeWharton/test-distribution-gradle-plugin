@@ -1,13 +1,23 @@
 # Change log
 
 ## [Unreleased]
-[Unreleased]: https://github.com/JakeWharton/test-distribution-gradle-plugin/compare/0.1.1...HEAD
+[Unreleased]: https://github.com/JakeWharton/test-distribution-gradle-plugin/compare/0.2.0...HEAD
 
 Added:
-- Initial support for `com.android.application` and `com.android.library` projects.
+- Nothing yet!
 
 Changed:
 - Nothing yet!
+
+Fixed:
+- Nothing yet!
+
+
+## [0.2.0] - 2025-09-19
+[0.2.0]: https://github.com/JakeWharton/test-distribution-gradle-plugin/releases/tag/0.2.0
+
+Added:
+- Initial support for `com.android.application` and `com.android.library` projects.
 
 Fixed:
 - Do not attempt to configure the new Android Kotlin multiplatform Gradle plugin's Kotlin target as if it were a "plain" Kotlin JVM target.
