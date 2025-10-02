@@ -85,6 +85,27 @@ class TestDistributionPluginFixtureTest {
 		)
 	}
 
+	@Test fun pluginKotlinMppWithAndroid() {
+		val name = "plugin-kotlin-mpp-with-android"
+		val fixtureDir = File(fixturesDir, name)
+		createRunner(fixtureDir, "installJvmTest").build()
+
+		val installDir = fixtureDir.resolve("build/install/jvmTest")
+		assertThat(installDir).isDirectory()
+
+		val binaryFile = installDir.resolve("bin/$name-test")
+		assertThat(binaryFile.readText())
+			.contains("""org.junit.runner.JUnitCore "com.example.AddTest"""")
+
+		val libDir = installDir.resolve("lib")
+		assertThat(libDir.list()).containsAtLeast(
+			"$name-jvm.jar",
+			"$name-jvm-tests.jar",
+		)
+
+		// TODO We should build Android as well.
+	}
+
 	@Test fun pluginKotlinMppWithBurst() {
 		val name = "plugin-kotlin-mpp-with-burst"
 		val fixtureDir = File(fixturesDir, name)
