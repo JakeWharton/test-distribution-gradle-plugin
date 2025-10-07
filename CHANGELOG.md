@@ -7,7 +7,7 @@ Added:
 - Nothing yet!
 
 Changed:
-- Nothing yet!
+- The minimum-supported Gradle version is now 9.0.
 
 Fixed:
 - Nothing yet!

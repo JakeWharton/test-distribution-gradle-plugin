@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmDefaultMode
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
@@ -64,18 +65,18 @@ repositories {
 }
 
 tasks.withType(JavaCompile).configureEach { task ->
-	task.sourceCompatibility = '11'
-	task.targetCompatibility = '11'
+	task.sourceCompatibility = '17'
+	task.targetCompatibility = '17'
 }
 
 tasks.withType(KotlinJvmCompile).configureEach { task ->
 	task.compilerOptions {
 		// Ensure compatibility with old Gradle versions. Keep in sync with TestDistributionPlugin.kt.
-		apiVersion = KotlinVersion.KOTLIN_1_8
-		languageVersion = KotlinVersion.KOTLIN_1_8
-		jvmTarget = JvmTarget.JVM_11
-		freeCompilerArgs.add('-Xjdk-release=11')
-		freeCompilerArgs.add('-Xjvm-default=all')
+		apiVersion = KotlinVersion.KOTLIN_2_2
+		languageVersion = KotlinVersion.KOTLIN_2_2
+		jvmTarget = JvmTarget.JVM_17
+		jvmDefault = JvmDefaultMode.NO_COMPATIBILITY
+		freeCompilerArgs.add('-Xjdk-release=17')
 	}
 }
 
