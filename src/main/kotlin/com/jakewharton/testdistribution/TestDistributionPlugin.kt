@@ -21,6 +21,7 @@ public class TestDistributionPlugin : Plugin<Project> {
 		val gradleMinimum = GradleVersion.version("9.0")
 		val gradleSupport = when {
 			gradleVersion >= gradleMinimum -> GradleSupport_9_0()
+
 			else -> {
 				error("Test distribution plugin requires $gradleMinimum or newer. Found $gradleVersion")
 			}
