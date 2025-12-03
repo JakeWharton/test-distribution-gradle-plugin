@@ -4,11 +4,19 @@ import assertk.assertThat
 import assertk.assertions.contains
 import assertk.assertions.containsAtLeast
 import assertk.assertions.isDirectory
+import com.google.testing.junit.testparameterinjector.TestParameter
+import com.google.testing.junit.testparameterinjector.TestParameterInjector
 import java.io.File
 import org.gradle.testkit.runner.GradleRunner
 import org.junit.Test
+import org.junit.runner.RunWith
 
-class TestDistributionPluginFixtureTest {
+@RunWith(TestParameterInjector::class)
+class TestDistributionPluginFixtureTest(
+	@param:TestParameter(LATEST_GRADLE_VERSION, MINIMUM_GRADLE_VERSION)
+	private val gradleVersion: String,
+) {
+
 	@Test fun pluginAndroidApplication() {
 		val name = "plugin-android-application"
 		val fixtureDir = File(fixturesDir, name)
@@ -129,12 +137,28 @@ class TestDistributionPluginFixtureTest {
 		val gradleRoot = File(fixtureDir, "gradle").also { it.mkdir() }
 		File("gradle/wrapper").copyRecursively(File(gradleRoot, "wrapper"), true)
 		return GradleRunner.create()
+			.apply {
+				if (gradleVersion != LATEST_GRADLE_VERSION) {
+					withGradleVersion(gradleVersion)
+				}
+			}
 			.withProjectDir(fixtureDir)
 			.withDebug(true) // Run in-process
-			.withArguments("clean", *tasks, "--stacktrace", "--continue", versionProperty)
+			.withArguments(
+				"clean",
+				*tasks,
+				"--stacktrace",
+				"--continue",
+				"--no-configuration-cache", // https://github.com/JakeWharton/test-distribution-gradle-plugin/issues/10
+				"--no-build-cache",
+				VERSION_PROPERTY,
+				VALIDATE_KOTLIN_METADATA,
+			)
 			.forwardOutput()
 	}
-
-	private val fixturesDir = File("src/test/fixtures")
-	private val versionProperty = "-PtestDistributionVersion=${System.getProperty("testDistributionVersion")!!}"
 }
+
+private val fixturesDir = File("src/test/fixtures")
+private const val VERSION_PROPERTY = "-PtestDistributionVersion=$PLUGIN_VERSION"
+private const val LATEST_GRADLE_VERSION = "latest"
+private const val VALIDATE_KOTLIN_METADATA = "-Porg.gradle.kotlin.dsl.skipMetadataVersionCheck=false"
