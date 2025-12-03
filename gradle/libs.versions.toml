@@ -1,9 +1,5 @@
-[versions]
-kotlin = "2.2.21"
-
 [libraries]
-kotlin-gradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
-kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test" }
+kotlin-gradlePlugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:2.2.21"
 
 dokkaPlugin = "org.jetbrains.dokka:dokka-gradle-plugin:2.1.0"
 spotlessPlugin = "com.diffplug.spotless:spotless-plugin-gradle:8.1.0"
