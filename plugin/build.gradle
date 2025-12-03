@@ -1,0 +1,94 @@
+apply plugin: 'org.jetbrains.kotlin.jvm'
+apply plugin: 'java-gradle-plugin'
+apply plugin: 'com.vanniktech.maven.publish'
+apply plugin: 'org.jetbrains.dokka'
+apply plugin: 'com.android.lint'
+apply plugin: 'com.github.gmazzo.buildconfig'
+
+gradlePlugin {
+	plugins {
+		testDistribution {
+			id = 'com.jakewharton.test-distribution'
+			displayName = 'Test Distribution'
+			description = 'Gradle plugin which creates distributions of JVM unit tests'
+			implementationClass = 'com.jakewharton.testdistribution.TestDistributionPlugin'
+		}
+	}
+}
+
+kotlin {
+	explicitApi()
+
+	abiValidation {
+		enabled = true
+	}
+}
+
+tasks.named('validatePlugins') {
+	enableStricterValidation = true
+}
+
+dependencies {
+	implementation project(':gradle-support-9-0')
+	implementation project(':gradle-support-9-4')
+
+	compileOnly libs.kotlin.gradlePlugin
+	compileOnly libs.android.gradlePlugin
+
+	testImplementation libs.junit
+	testImplementation libs.assertk
+	testImplementation libs.testParameterInjector
+
+	lintChecks libs.androidx.gradlePluginLints
+}
+
+// HEY! If you update the minimum-supported Gradle version check to see if the Kotlin language version or
+// Java targets below can be bumped. See https://docs.gradle.org/current/userguide/compatibility.html.
+def minimumGradleVersion = '9.0'
+configurations.apiElements {
+	attributes {
+		attribute(
+			GradlePluginApiVersion.GRADLE_PLUGIN_API_VERSION_ATTRIBUTE,
+			objects.named(GradlePluginApiVersion, minimumGradleVersion),
+		)
+	}
+}
+
+buildConfig {
+	useKotlinOutput {
+		packageName = 'com.jakewharton.testdistribution'
+		internalVisibility = true
+		topLevelConstants = true
+	}
+
+	sourceSets.getByName('test') {
+		buildConfigField(String, "PLUGIN_VERSION", VERSION_NAME)
+		buildConfigField(String, 'MINIMUM_GRADLE_VERSION', minimumGradleVersion)
+	}
+}
+
+tasks.named('test') {
+	dependsOn(':gradle-support:publishAllPublicationsToTestingRepository')
+	dependsOn(':gradle-support-9-0:publishAllPublicationsToTestingRepository')
+	dependsOn(':gradle-support-9-4:publishAllPublicationsToTestingRepository')
+	dependsOn(':plugin:publishAllPublicationsToTestingRepository')
+	inputs.dir('src/test/fixtures')
+
+	// Required to test configuration cache in tests when using withDebug()
+	// https://github.com/gradle/gradle/issues/22765#issuecomment-1339427241
+	jvmArgs(
+		"--add-opens",
+		"java.base/java.util=ALL-UNNAMED",
+		"--add-opens",
+		"java.base/java.util.concurrent.atomic=ALL-UNNAMED",
+		"--add-opens",
+		"java.base/java.lang.invoke=ALL-UNNAMED",
+		"--add-opens",
+		"java.base/java.net=ALL-UNNAMED",
+	)
+}
+
+tasks.named('check') { check ->
+	// TODO: https://youtrack.jetbrains.com/issue/KT-78525
+	check.dependsOn(tasks.named('checkLegacyAbi'))
+}
