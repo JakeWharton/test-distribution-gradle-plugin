@@ -1,7 +1,6 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmDefaultMode
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
+import tapmoc.Severity
 
 buildscript {
 	dependencies {
@@ -10,6 +9,8 @@ buildscript {
 		classpath libs.gradleMavenPublishPlugin
 		classpath libs.spotlessPlugin
 		classpath libs.android.gradlePlugin
+		classpath libs.compatPlugin
+		classpath libs.buildConfigPlugin
 	}
 	repositories {
 		mavenCentral()
@@ -23,6 +24,8 @@ apply plugin: 'com.vanniktech.maven.publish'
 apply plugin: 'org.jetbrains.dokka'
 apply plugin: 'com.diffplug.spotless'
 apply plugin: 'com.android.lint'
+apply plugin: 'com.github.gmazzo.buildconfig'
+apply plugin: 'com.gradleup.tapmoc'
 
 gradlePlugin {
 	plugins {
@@ -54,7 +57,6 @@ dependencies {
 	testImplementation libs.junit
 	testImplementation libs.assertk
 	testImplementation libs.testParameterInjector
-	testImplementation gradleTestKit()
 
 	lintChecks libs.androidx.gradlePluginLints
 }
@@ -64,25 +66,47 @@ repositories {
 	google()
 }
 
-tasks.withType(JavaCompile).configureEach { task ->
-	task.sourceCompatibility = '17'
-	task.targetCompatibility = '17'
+// HEY! If you update the minimum-supported Gradle version check to see if the Kotlin language version or
+// Java targets below can be bumped. See https://docs.gradle.org/current/userguide/compatibility.html.
+def minimumGradleVersion = '9.0'
+configurations.apiElements {
+	attributes {
+		attribute(
+			GradlePluginApiVersion.GRADLE_PLUGIN_API_VERSION_ATTRIBUTE,
+			objects.named(GradlePluginApiVersion, minimumGradleVersion),
+		)
+	}
+}
+
+apply plugin: 'com.gradleup.tapmoc'
+tapmoc {
+	java(17)
+	kotlin('2.2.0')
+	checkApiDependencies(Severity.ERROR)
+	checkRuntimeDependencies(Severity.ERROR)
 }
 
 tasks.withType(KotlinJvmCompile).configureEach { task ->
 	task.compilerOptions {
-		// Ensure compatibility with old Gradle versions. Keep in sync with TestDistributionPlugin.kt.
-		apiVersion = KotlinVersion.KOTLIN_2_2
-		languageVersion = KotlinVersion.KOTLIN_2_2
-		jvmTarget = JvmTarget.JVM_17
 		jvmDefault = JvmDefaultMode.NO_COMPATIBILITY
-		freeCompilerArgs.add('-Xjdk-release=17')
+	}
+}
+
+buildConfig {
+	useKotlinOutput {
+		packageName = 'com.jakewharton.testdistribution'
+		internalVisibility = true
+		topLevelConstants = true
+	}
+
+	sourceSets.getByName('test') {
+		buildConfigField(String, "PLUGIN_VERSION", VERSION_NAME)
+		buildConfigField(String, 'MINIMUM_GRADLE_VERSION', minimumGradleVersion)
 	}
 }
 
 tasks.named('test') {
 	dependsOn(':publishAllPublicationsToTestingRepository')
-	systemProperty('testDistributionVersion', VERSION_NAME)
 	inputs.dir('src/test/fixtures')
 
 	testLogging {
