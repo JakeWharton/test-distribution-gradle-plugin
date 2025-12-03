@@ -1,0 +1,43 @@
+buildscript {
+	dependencies {
+		classpath "com.jakewharton.gradle:test-distribution-gradle-plugin:$testDistributionVersion"
+		classpath libs.kotlin.gradlePlugin
+		classpath libs.android.gradlePlugin
+	}
+
+	repositories {
+		maven {
+			url "file://${rootDir.absolutePath}/../../../../../build/localMaven"
+		}
+		mavenCentral()
+		google()
+	}
+}
+
+apply plugin: 'org.jetbrains.kotlin.multiplatform'
+apply plugin: 'com.android.kotlin.multiplatform.library'
+apply plugin: 'com.jakewharton.test-distribution'
+
+kotlin {
+	android {
+		namespace = 'com.example'
+		compileSdk = 36
+		minSdk = 26
+	}
+
+	jvm()
+
+	linuxArm64()
+	linuxX64()
+	macosArm64()
+	macosX64()
+	mingwX64()
+
+	sourceSets {
+		commonTest {
+			dependencies {
+				implementation(libs.kotlin.test)
+			}
+		}
+	}
+}

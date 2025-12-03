@@ -1,1 +1,6 @@
 rootProject.name = 'test-distribution-gradle-plugin'
+
+include ':gradle-support'
+include ':gradle-support-9-0'
+include ':gradle-support-9-4'
+include ':plugin'

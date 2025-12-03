@@ -3,6 +3,7 @@ kotlin = "2.2.21"
 
 [libraries]
 kotlin-gradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test" }
 
 dokkaPlugin = "org.jetbrains.dokka:dokka-gradle-plugin:2.1.0"

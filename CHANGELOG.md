@@ -4,7 +4,7 @@
 [Unreleased]: https://github.com/JakeWharton/test-distribution-gradle-plugin/compare/0.2.0...HEAD
 
 Added:
-- Nothing yet!
+- Support for Gradle 9.4.
 
 Changed:
 - The minimum-supported Gradle version is now 9.0.
