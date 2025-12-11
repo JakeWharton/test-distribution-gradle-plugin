@@ -8,6 +8,8 @@ import com.google.testing.junit.testparameterinjector.TestParameter
 import com.google.testing.junit.testparameterinjector.TestParameterInjector
 import java.io.File
 import org.gradle.testkit.runner.GradleRunner
+import org.gradle.util.GradleVersion
+import org.junit.Assume.assumeTrue
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -16,8 +18,14 @@ class TestDistributionPluginFixtureTest(
 	@param:TestParameter(LATEST_GRADLE_VERSION, MINIMUM_GRADLE_VERSION)
 	private val gradleVersion: String,
 ) {
+	private fun supportsAgp9(): Boolean {
+		return gradleVersion == LATEST_GRADLE_VERSION ||
+			GradleVersion.version(gradleVersion) >= GradleVersion.version("9.1")
+	}
 
 	@Test fun pluginAndroidApplication() {
+		assumeTrue(supportsAgp9())
+
 		val name = "plugin-android-application"
 		val fixtureDir = File(fixturesDir, name)
 		createRunner(fixtureDir, "installDebugUnitTest").build()
@@ -37,6 +45,8 @@ class TestDistributionPluginFixtureTest(
 	}
 
 	@Test fun pluginAndroidLibrary() {
+		assumeTrue(supportsAgp9())
+
 		val name = "plugin-android-library"
 		val fixtureDir = File(fixturesDir, name)
 		createRunner(fixtureDir, "installDebugUnitTest").build()
@@ -94,6 +104,8 @@ class TestDistributionPluginFixtureTest(
 	}
 
 	@Test fun pluginKotlinMppWithAndroid() {
+		assumeTrue(supportsAgp9())
+
 		val name = "plugin-kotlin-mpp-with-android"
 		val fixtureDir = File(fixturesDir, name)
 		createRunner(fixtureDir, "installJvmTest").build()
