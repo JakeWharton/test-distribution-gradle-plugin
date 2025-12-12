@@ -5,6 +5,7 @@
 
 Added:
 - Support for Gradle 9.4.
+- `org.gradle.java` plugin is now supported (the base plugin of the `java` and `java-library` plugins).
 
 Changed:
 - The minimum-supported Gradle version is now 9.0.
