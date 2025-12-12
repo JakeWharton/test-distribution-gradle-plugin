@@ -1,0 +1,19 @@
+buildscript {
+	dependencies {
+		classpath "com.jakewharton.gradle:test-distribution-gradle-plugin:$testDistributionVersion"
+	}
+
+	repositories {
+		maven {
+			url "file://${rootDir.absolutePath}/../../../../../build/localMaven"
+		}
+		mavenCentral()
+	}
+}
+
+apply plugin: 'java-library'
+apply plugin: 'com.jakewharton.test-distribution'
+
+dependencies {
+	testImplementation libs.junit
+}

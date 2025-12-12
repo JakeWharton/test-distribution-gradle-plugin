@@ -45,5 +45,10 @@ public class TestDistributionPlugin : Plugin<Project> {
 			gotPlugin = true
 			configureKotlinMultiplatformPlugin(project, gradleSupport)
 		}
+
+		project.pluginManager.withPlugin("org.gradle.java") {
+			gotPlugin = true
+			configureJavaPlugin(project, gradleSupport)
+		}
 	}
 }
