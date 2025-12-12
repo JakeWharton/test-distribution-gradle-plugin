@@ -103,6 +103,25 @@ class TestDistributionPluginFixtureTest(
 		)
 	}
 
+	@Test fun pluginJavaLibraryViaKotlin() {
+		val name = "plugin-java-library-via-kotlin"
+		val fixtureDir = File(fixturesDir, name)
+		createRunner(fixtureDir, "installTest").build()
+
+		val installDir = fixtureDir.resolve("build/install/test")
+		assertThat(installDir).isDirectory()
+
+		val binaryFile = installDir.resolve("bin/$name-test")
+		assertThat(binaryFile.readText())
+			.contains("""org.junit.runner.JUnitCore "com.example.AddTest"""")
+
+		val libDir = installDir.resolve("lib")
+		assertThat(libDir.list()).containsAtLeast(
+			"$name.jar",
+			"$name-tests.jar",
+		)
+	}
+
 	@Test fun pluginKotlinMpp() {
 		val name = "plugin-kotlin-mpp"
 		val fixtureDir = File(fixturesDir, name)
