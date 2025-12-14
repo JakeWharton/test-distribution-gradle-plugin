@@ -47,7 +47,7 @@ internal fun configureKotlinMultiplatformPlugin(project: Project, gradleSupport:
 						testClasses.asFileTree,
 						testClasses.files.toList(),
 						testDependencies.files.toList(),
-					)
+					).sorted()
 					"org.junit.runner.JUnitCore ${testFqcns.joinToString(" ") { """"$it"""" }}"
 				},
 			)

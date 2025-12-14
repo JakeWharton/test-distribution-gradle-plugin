@@ -103,8 +103,8 @@ class TestDistributionPluginFixtureTest(
 		)
 	}
 
-	@Test fun pluginJavaLibraryViaKotlin() {
-		val name = "plugin-java-library-via-kotlin"
+	@Test fun pluginJavaLibraryWithKotlin() {
+		val name = "plugin-java-library-with-kotlin"
 		val fixtureDir = File(fixturesDir, name)
 		createRunner(fixtureDir, "installTest").build()
 
@@ -113,7 +113,7 @@ class TestDistributionPluginFixtureTest(
 
 		val binaryFile = installDir.resolve("bin/$name-test")
 		assertThat(binaryFile.readText())
-			.contains("""org.junit.runner.JUnitCore "com.example.AddTest"""")
+			.contains("""org.junit.runner.JUnitCore "com.example.AddTest" "com.example.SubTest"""")
 
 		val libDir = installDir.resolve("lib")
 		assertThat(libDir.list()).containsAtLeast(
@@ -132,7 +132,7 @@ class TestDistributionPluginFixtureTest(
 
 		val binaryFile = installDir.resolve("bin/$name-test")
 		assertThat(binaryFile.readText())
-			.contains("""org.junit.runner.JUnitCore "com.example.AddTest"""")
+			.contains("""org.junit.runner.JUnitCore "com.example.AddTest" "com.example.SubTest"""")
 
 		val libDir = installDir.resolve("lib")
 		assertThat(libDir.list()).containsAtLeast(

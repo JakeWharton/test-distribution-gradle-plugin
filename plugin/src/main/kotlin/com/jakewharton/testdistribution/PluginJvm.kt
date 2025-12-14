@@ -141,7 +141,7 @@ private fun configureTasks(
 					testClasses,
 					testClasses.files.toList(),
 					testDependencies.files.toList(),
-				)
+				).sorted()
 				"org.junit.runner.JUnitCore ${testFqcns.joinToString(" ") { """"$it"""" }}"
 			},
 		)
