@@ -65,7 +65,7 @@ internal fun configureAndroidPlugin(project: Project, gradleSupport: GradleSuppo
 									testClasses,
 									testClasses.files.toList(),
 									jars.map(RegularFile::getAsFile),
-								)
+								).sorted()
 								"org.junit.runner.JUnitCore ${testFqcns.joinToString(" ") { """"$it"""" }}"
 							}
 						},

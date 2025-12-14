@@ -3,8 +3,8 @@ package com.example
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class AddTest {
+class SubTest {
 	@Test fun simple() {
-		assertEquals(5, add(3, 2))
+		assertEquals(1, sub(3, 2))
 	}
 }
