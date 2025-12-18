@@ -17,6 +17,6 @@ assertk = "com.willowtreeapps.assertk:assertk:0.28.1"
 testParameterInjector = "com.google.testparameterinjector:test-parameter-injector:1.20"
 ktlint = "com.pinterest.ktlint:ktlint-cli:1.8.0"
 
-android-gradlePlugin = "com.android.tools.build:gradle:9.0.0-beta05"
+android-gradlePlugin = "com.android.tools.build:gradle:9.0.0-rc01"
 androidx-gradlePluginLints = "androidx.lint:lint-gradle:1.0.0-alpha05"
 burst-gradlePlugin = "app.cash.burst:burst-gradle-plugin:2.10.2"
