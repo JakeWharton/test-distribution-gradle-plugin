@@ -29,7 +29,7 @@ tasks.named('validatePlugins') {
 }
 
 dependencies {
-	implementation project(':gradle-support-9-0')
+	implementation project(':gradle-support-9-1')
 	implementation project(':gradle-support-9-4')
 
 	compileOnly libs.kotlin.gradlePlugin
@@ -44,7 +44,7 @@ dependencies {
 
 // HEY! If you update the minimum-supported Gradle version check to see if the Kotlin language version or
 // Java targets below can be bumped. See https://docs.gradle.org/current/userguide/compatibility.html.
-def minimumGradleVersion = '9.0'
+def minimumGradleVersion = '9.1.0'
 configurations.apiElements {
 	attributes {
 		attribute(
@@ -69,7 +69,7 @@ buildConfig {
 
 tasks.named('test') {
 	dependsOn(':gradle-support:publishAllPublicationsToTestingRepository')
-	dependsOn(':gradle-support-9-0:publishAllPublicationsToTestingRepository')
+	dependsOn(':gradle-support-9-1:publishAllPublicationsToTestingRepository')
 	dependsOn(':gradle-support-9-4:publishAllPublicationsToTestingRepository')
 	dependsOn(':plugin:publishAllPublicationsToTestingRepository')
 	inputs.dir('src/test/fixtures')
