@@ -9,7 +9,7 @@ Added:
 - `org.jetbrains.kotlin.jvm` plugin is now supported.
 
 Changed:
-- The minimum-supported Gradle version is now 9.0.
+- The minimum-supported Gradle version is now 9.1.
 
 Fixed:
 - Nothing yet!
