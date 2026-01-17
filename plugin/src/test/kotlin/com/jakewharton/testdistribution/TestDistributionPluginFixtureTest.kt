@@ -13,7 +13,12 @@ import org.junit.runner.RunWith
 
 @RunWith(TestParameterInjector::class)
 class TestDistributionPluginFixtureTest(
-	@param:TestParameter(LATEST_GRADLE_VERSION, MINIMUM_GRADLE_VERSION)
+	@param:TestParameter(
+		LATEST_GRADLE_VERSION,
+		"9.3.0",
+		"9.2.0",
+		MINIMUM_GRADLE_VERSION,
+	)
 	private val gradleVersion: String,
 ) {
 	@Test fun pluginAndroidApplication() {

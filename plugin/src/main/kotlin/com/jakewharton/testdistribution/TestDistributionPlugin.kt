@@ -15,7 +15,7 @@ public class TestDistributionPlugin : Plugin<Project> {
 				error("Test distribution plugin requires $gradleMinimum or newer. Found $gradleVersion")
 			}
 
-			gradleVersion >= GradleVersion.version("9.4") -> GradleSupport_9_4()
+			gradleVersion >= GradleVersion.version("9.3") -> GradleSupport_9_3()
 
 			else -> GradleSupport_9_0()
 		}
