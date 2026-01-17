@@ -15,7 +15,7 @@ buildscript {
     mavenCentral()
   }
   dependencies {
-    classpath 'com.jakewharton.gradle:test-distribution-gradle-plugin:0.2.0'
+    classpath 'com.jakewharton.gradle:test-distribution-gradle-plugin:0.3.0'
   }
 }
 
@@ -50,10 +50,12 @@ apply plugin: 'com.jakewharton.test-distribution'
 This plugin relies on Gradle internal APIs.
 As such, certain versions of the plugin only work with certain versions of Gradle.
 
-| Gradle        | Plugin                 |
-|---------------|------------------------|
-| 9.0.0 - 9.1.0 | 0.2.0 - 0.3.0-SNAPSHOT |
-| 8.10 - 8.14.3 | 0.1.0 - 0.2.0          |
+| Gradle        | Plugin        |
+|---------------|---------------|
+| 9.3.0         | 0.3.0         |
+| 9.1.0 - 9.2.1 | 0.2.0 - 0.3.0 |
+| 9.0.0         | 0.2.0         |
+| 8.10 - 8.14.3 | 0.1.0 - 0.2.0 |
 
 Gradle versions newer than those listed may be supported, but have not been tested.
 

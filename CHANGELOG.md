@@ -1,7 +1,13 @@
 # Change log
 
 ## [Unreleased]
-[Unreleased]: https://github.com/JakeWharton/test-distribution-gradle-plugin/compare/0.2.0...HEAD
+[Unreleased]: https://github.com/JakeWharton/test-distribution-gradle-plugin/compare/0.3.0...HEAD
+
+Nothing yet!
+
+
+## [0.3.0] - 2026-01-016
+[0.3.0]: https://github.com/JakeWharton/test-distribution-gradle-plugin/releases/tag/0.3.0
 
 Added:
 - Support for Gradle 9.3.
@@ -10,9 +16,6 @@ Added:
 
 Changed:
 - The minimum-supported Gradle version is now 9.1.
-
-Fixed:
-- Nothing yet!
 
 
 ## [0.2.0] - 2025-09-19
