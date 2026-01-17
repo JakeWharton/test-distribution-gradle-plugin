@@ -4,7 +4,7 @@
 [Unreleased]: https://github.com/JakeWharton/test-distribution-gradle-plugin/compare/0.2.0...HEAD
 
 Added:
-- Support for Gradle 9.4.
+- Support for Gradle 9.3.
 - `org.gradle.java` plugin is now supported (the base plugin of the `java` and `java-library` plugins).
 - `org.jetbrains.kotlin.jvm` plugin is now supported.
 
