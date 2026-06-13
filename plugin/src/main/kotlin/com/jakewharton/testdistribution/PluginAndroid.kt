@@ -5,7 +5,7 @@ import com.android.build.api.variant.AndroidComponentsExtension
 import com.android.build.api.variant.HasHostTests
 import com.android.build.api.variant.ScopedArtifacts
 import org.gradle.api.Project
-import org.gradle.api.file.RegularFile
+import org.gradle.api.file.FileSystemLocation
 import org.gradle.api.plugins.BasePluginExtension
 import org.gradle.api.tasks.Copy
 import org.gradle.api.tasks.application.CreateStartScripts
@@ -53,21 +53,19 @@ internal fun configureAndroidPlugin(project: Project, gradleSupport: GradleSuppo
 						.from(testJarProvider.map { it.outputs.files })
 						.from(dummyClassesProvider.flatMap { it.jars })
 
-					it.mainClass.set(
-						dummyClassesProvider.flatMap {
-							it.classDirs.zip(it.jars) { classDirs, jars ->
-								val testClasses = project.objects.fileTree()
-								for (classDir in classDirs) {
-									testClasses.from(classDir)
-								}
+					val testClasses = project.objects.fileCollection()
+						.from(dummyClassesProvider.flatMap(ScopedArtifactDummyTask::classDirs))
+					val testJars = project.objects.fileCollection()
+						.from(dummyClassesProvider.flatMap(ScopedArtifactDummyTask::jars))
 
-								val testFqcns = gradleSupport.detectTestClassNames(
-									testClasses,
-									testClasses.files.toList(),
-									jars.map(RegularFile::getAsFile),
-								).sorted()
-								"org.junit.runner.JUnitCore ${testFqcns.joinToString(" ") { """"$it"""" }}"
-							}
+					it.mainClass.set(
+						testClasses.elements.zip(testJars.elements) { classElements, jarElements ->
+							val testFqcns = gradleSupport.detectTestClassNames(
+								testClasses.asFileTree,
+								classElements.map(FileSystemLocation::getAsFile),
+								jarElements.map(FileSystemLocation::getAsFile),
+							).sorted()
+							"org.junit.runner.JUnitCore ${testFqcns.joinToString(" ") { """"$it"""" }}"
 						},
 					)
 				}

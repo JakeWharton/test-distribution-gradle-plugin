@@ -211,7 +211,7 @@ class TestDistributionPluginFixtureTest(
 				*tasks,
 				"--stacktrace",
 				"--continue",
-				"--no-configuration-cache", // https://github.com/JakeWharton/test-distribution-gradle-plugin/issues/10
+				"--configuration-cache",
 				"--no-build-cache",
 				VERSION_PROPERTY,
 				VALIDATE_KOTLIN_METADATA,
