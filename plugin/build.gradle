@@ -67,7 +67,8 @@ buildConfig {
 	}
 }
 
-tasks.named('test') {
+tasks.withType(Test).configureEach {
+	maxHeapSize = '1g'
 	dependsOn(':gradle-support:publishAllPublicationsToTestingRepository')
 	dependsOn(':gradle-support-9-1:publishAllPublicationsToTestingRepository')
 	dependsOn(':gradle-support-9-3:publishAllPublicationsToTestingRepository')
