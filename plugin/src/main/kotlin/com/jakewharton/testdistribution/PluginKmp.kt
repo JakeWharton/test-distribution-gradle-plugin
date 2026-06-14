@@ -2,6 +2,7 @@ package com.jakewharton.testdistribution
 
 import java.io.File
 import org.gradle.api.Project
+import org.gradle.api.file.FileSystemLocation
 import org.gradle.api.plugins.BasePluginExtension
 import org.gradle.api.tasks.Copy
 import org.gradle.api.tasks.application.CreateStartScripts
@@ -21,13 +22,13 @@ internal fun configureKotlinMultiplatformPlugin(project: Project, gradleSupport:
 		val mainJarProvider = project.tasks.named(target.artifactsTaskName)
 
 		val testCompilation = target.compilations.named(TEST_COMPILATION_NAME)
-		val testClassesProvider = testCompilation.map { it.output.allOutputs }
-		val testDependenciesProvider = testCompilation.map {
-			it.runtimeDependencyFiles.filter(File::isFile)
-		}
+		val testClasses = project.objects.fileCollection()
+			.from(testCompilation.map { it.output.allOutputs })
+		val testDependencies = project.objects.fileCollection()
+			.from(testCompilation.map { it.runtimeDependencyFiles.filter(File::isFile) })
 
 		val testJarProvider = project.tasks.register("jar$nameUpper", Jar::class.java) {
-			it.from(testClassesProvider)
+			it.from(testClasses)
 			it.archiveAppendix.set(target.name)
 			it.archiveClassifier.set("tests")
 		}
@@ -39,14 +40,14 @@ internal fun configureKotlinMultiplatformPlugin(project: Project, gradleSupport:
 			it.classpath = project.objects.fileCollection()
 				.from(mainJarProvider.map { it.outputs.files })
 				.from(testJarProvider.map { it.outputs.files })
-				.from(testDependenciesProvider)
+				.from(testDependencies)
 
 			it.mainClass.set(
-				testClassesProvider.zip(testDependenciesProvider) { testClasses, testDependencies ->
+				testClasses.elements.zip(testDependencies.elements) { classElements, dependencyElements ->
 					val testFqcns = gradleSupport.detectTestClassNames(
 						testClasses.asFileTree,
-						testClasses.files.toList(),
-						testDependencies.files.toList(),
+						classElements.map(FileSystemLocation::getAsFile),
+						dependencyElements.map(FileSystemLocation::getAsFile),
 					).sorted()
 					"org.junit.runner.JUnitCore ${testFqcns.joinToString(" ") { """"$it"""" }}"
 				},
@@ -63,7 +64,7 @@ internal fun configureKotlinMultiplatformPlugin(project: Project, gradleSupport:
 			it.into("lib") {
 				it.from(testJarProvider)
 				it.from(mainJarProvider)
-				it.from(testDependenciesProvider)
+				it.from(testDependencies)
 			}
 			it.destinationDir = project.layout.buildDirectory.dir("install/$name").get().asFile
 		}
