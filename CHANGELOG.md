@@ -3,7 +3,8 @@
 ## [Unreleased]
 [Unreleased]: https://github.com/JakeWharton/test-distribution-gradle-plugin/compare/0.3.0...HEAD
 
-Nothing yet!
+Fixed:
+- Android distribution tasks are now compatible with configuration cache.
 
 
 ## [0.3.0] - 2026-01-016

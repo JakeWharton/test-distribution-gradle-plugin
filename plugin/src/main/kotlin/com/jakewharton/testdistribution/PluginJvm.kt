@@ -4,12 +4,11 @@ import java.io.File
 import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.api.file.FileCollection
-import org.gradle.api.file.FileTree
+import org.gradle.api.file.FileSystemLocation
 import org.gradle.api.plugins.BasePluginExtension
 import org.gradle.api.plugins.JavaPlugin.COMPILE_TEST_JAVA_TASK_NAME
 import org.gradle.api.plugins.JavaPlugin.JAR_TASK_NAME
 import org.gradle.api.plugins.JavaPlugin.TEST_RUNTIME_CLASSPATH_CONFIGURATION_NAME
-import org.gradle.api.provider.Provider
 import org.gradle.api.tasks.Copy
 import org.gradle.api.tasks.TaskProvider
 import org.gradle.api.tasks.application.CreateStartScripts
@@ -71,17 +70,17 @@ private fun finishKotlinPlugin(
 	val mainJarProvider = project.tasks.named(target.artifactsTaskName)
 
 	val testCompilation = target.compilations.named(TEST_COMPILATION_NAME)
-	val testClassesProvider = testCompilation.map { it.output.allOutputs.asFileTree }
-	val testDependenciesProvider = testCompilation.map {
-		it.runtimeDependencyFiles?.filter(File::isFile)
-	}
+	val testClasses = project.objects.fileCollection()
+		.from(testCompilation.map { it.output.allOutputs })
+	val testDependencies = project.objects.fileCollection()
+		.from(testCompilation.map { it.runtimeDependencyFiles?.filter(File::isFile) })
 
 	configureTasks(
 		project,
 		gradleSupport,
 		mainJarProvider,
-		testClassesProvider,
-		testDependenciesProvider,
+		testClasses,
+		testDependencies,
 		testJarProvider,
 		testScriptsProvider,
 		installProvider,
@@ -98,21 +97,21 @@ private fun finishJavaPlugin(
 	val mainJarProvider = project.tasks.named(JAR_TASK_NAME)
 
 	val testCompilation = project.tasks.named(COMPILE_TEST_JAVA_TASK_NAME)
-	val testClassesProvider = testCompilation.flatMap {
-		(it as JavaCompile).destinationDirectory.map { it.asFileTree }
-	}
-	val testDependenciesProvider = project.configurations.named(TEST_RUNTIME_CLASSPATH_CONFIGURATION_NAME).map { it.asFileTree }
+	val testClasses = project.objects.fileCollection()
+		.from(testCompilation.flatMap { (it as JavaCompile).destinationDirectory })
+	val testDependencies = project.objects.fileCollection()
+		.from(project.configurations.named(TEST_RUNTIME_CLASSPATH_CONFIGURATION_NAME))
 
 	testJarProvider.configure {
-		it.from(testClassesProvider)
+		it.from(testClasses)
 	}
 
 	configureTasks(
 		project,
 		gradleSupport,
 		mainJarProvider,
-		testClassesProvider,
-		testDependenciesProvider,
+		testClasses,
+		testDependencies,
 		testJarProvider,
 		testScriptsProvider,
 		installProvider,
@@ -123,8 +122,8 @@ private fun configureTasks(
 	project: Project,
 	gradleSupport: GradleSupport,
 	mainJarProvider: TaskProvider<Task>,
-	testClassesProvider: Provider<FileTree>,
-	testDependenciesProvider: Provider<out FileCollection>,
+	testClasses: FileCollection,
+	testDependencies: FileCollection,
 	testJarProvider: TaskProvider<Jar>,
 	testScriptsProvider: TaskProvider<CreateStartScripts>,
 	installProvider: TaskProvider<Copy>,
@@ -133,14 +132,14 @@ private fun configureTasks(
 		it.classpath = project.objects.fileCollection()
 			.from(mainJarProvider.map { it.outputs.files })
 			.from(testJarProvider.map { it.outputs.files })
-			.from(testDependenciesProvider)
+			.from(testDependencies)
 
 		it.mainClass.set(
-			testClassesProvider.zip(testDependenciesProvider) { testClasses, testDependencies ->
+			testClasses.elements.zip(testDependencies.elements) { classElements, dependencyElements ->
 				val testFqcns = gradleSupport.detectTestClassNames(
-					testClasses,
-					testClasses.files.toList(),
-					testDependencies.files.toList(),
+					testClasses.asFileTree,
+					classElements.map(FileSystemLocation::getAsFile),
+					dependencyElements.map(FileSystemLocation::getAsFile),
 				).sorted()
 				"org.junit.runner.JUnitCore ${testFqcns.joinToString(" ") { """"$it"""" }}"
 			},
@@ -154,7 +153,7 @@ private fun configureTasks(
 		it.into("lib") {
 			it.from(testJarProvider)
 			it.from(mainJarProvider)
-			it.from(testDependenciesProvider)
+			it.from(testDependencies)
 		}
 	}
 }
