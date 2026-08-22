@@ -44,7 +44,7 @@ internal fun configureKotlinMultiplatformPlugin(project: Project, gradleSupport:
 
 			it.mainClass.set(
 				testClasses.elements.zip(testDependencies.elements) { classElements, dependencyElements ->
-					val testFqcns = gradleSupport.detectTestClassNames(
+					val testFqcns = gradleSupport.detectJunit4TestClassNames(
 						testClasses.asFileTree,
 						classElements.map(FileSystemLocation::getAsFile),
 						dependencyElements.map(FileSystemLocation::getAsFile),
