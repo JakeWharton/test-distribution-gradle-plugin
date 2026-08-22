@@ -1,6 +1,7 @@
 buildscript {
 	dependencies {
 		classpath "com.jakewharton.gradle:test-distribution-gradle-plugin:$testDistributionVersion"
+		classpath libs.android.gradlePlugin
 	}
 
 	repositories {
@@ -8,12 +9,22 @@ buildscript {
 			url "file://${rootDir.absolutePath}/../../../../../build/localMaven"
 		}
 		mavenCentral()
+		google()
 	}
 }
 
-apply plugin: 'java-library'
 apply plugin: 'com.jakewharton.test-distribution'
+apply plugin: 'com.android.application'
+
+android {
+	namespace = 'com.example'
+	compileSdk = 36
+
+	defaultConfig {
+		minSdk = 24
+	}
+}
 
 dependencies {
-	testImplementation libs.junit
+	testImplementation libs.junit4
 }

@@ -22,8 +22,8 @@ class TestDistributionPluginFixtureTest(
 	)
 	private val gradleVersion: String,
 ) {
-	@Test fun pluginAndroidApplication() {
-		val name = "plugin-android-application"
+	@Test fun junit4PluginAndroidApplication() {
+		val name = "junit4-plugin-android-application"
 		val fixtureDir = File(fixturesDir, name)
 		createRunner(fixtureDir, "installDebugUnitTest").build()
 
@@ -41,8 +41,8 @@ class TestDistributionPluginFixtureTest(
 		)
 	}
 
-	@Test fun pluginAndroidLibrary() {
-		val name = "plugin-android-library"
+	@Test fun junit4PluginAndroidLibrary() {
+		val name = "junit4-plugin-android-library"
 		val fixtureDir = File(fixturesDir, name)
 		createRunner(fixtureDir, "installDebugUnitTest").build()
 
@@ -60,8 +60,8 @@ class TestDistributionPluginFixtureTest(
 		)
 	}
 
-	@Test fun pluginJavaApplication() {
-		val name = "plugin-java-application"
+	@Test fun junit4PluginJavaApplication() {
+		val name = "junit4-plugin-java-application"
 		val fixtureDir = File(fixturesDir, name)
 		createRunner(fixtureDir, "installTest").build()
 
@@ -79,8 +79,8 @@ class TestDistributionPluginFixtureTest(
 		)
 	}
 
-	@Test fun pluginJavaLibrary() {
-		val name = "plugin-java-library"
+	@Test fun junit4PluginJavaLibrary() {
+		val name = "junit4-plugin-java-library"
 		val fixtureDir = File(fixturesDir, name)
 		createRunner(fixtureDir, "installTest").build()
 
@@ -98,8 +98,8 @@ class TestDistributionPluginFixtureTest(
 		)
 	}
 
-	@Test fun pluginJavaLibraryWithKotlin() {
-		val name = "plugin-java-library-with-kotlin"
+	@Test fun junit4PluginJavaLibraryWithKotlin() {
+		val name = "junit4-plugin-java-library-with-kotlin"
 		val fixtureDir = File(fixturesDir, name)
 		createRunner(fixtureDir, "installTest").build()
 
@@ -117,8 +117,8 @@ class TestDistributionPluginFixtureTest(
 		)
 	}
 
-	@Test fun pluginKotlinMpp() {
-		val name = "plugin-kotlin-mpp"
+	@Test fun junit4PluginKotlinMpp() {
+		val name = "junit4-plugin-kotlin-mpp"
 		val fixtureDir = File(fixturesDir, name)
 		createRunner(fixtureDir, "installJvmTest").build()
 
@@ -136,8 +136,8 @@ class TestDistributionPluginFixtureTest(
 		)
 	}
 
-	@Test fun pluginKotlinMppTargetName() {
-		val name = "plugin-kotlin-mpp-target-name"
+	@Test fun junit4PluginKotlinMppTargetName() {
+		val name = "junit4-plugin-kotlin-mpp-target-name"
 		val fixtureDir = File(fixturesDir, name)
 		createRunner(fixtureDir, "installDesktopTest").build()
 
@@ -155,8 +155,8 @@ class TestDistributionPluginFixtureTest(
 		)
 	}
 
-	@Test fun pluginKotlinMppWithAndroid() {
-		val name = "plugin-kotlin-mpp-with-android"
+	@Test fun junit4PluginKotlinMppWithAndroid() {
+		val name = "junit4-plugin-kotlin-mpp-with-android"
 		val fixtureDir = File(fixturesDir, name)
 		createRunner(fixtureDir, "installJvmTest").build()
 
