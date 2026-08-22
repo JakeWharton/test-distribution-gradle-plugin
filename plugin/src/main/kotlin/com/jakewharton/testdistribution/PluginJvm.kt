@@ -73,7 +73,12 @@ private fun finishKotlinPlugin(
 	val testClasses = project.objects.fileCollection()
 		.from(testCompilation.map { it.output.allOutputs })
 	val testDependencies = project.objects.fileCollection()
-		.from(testCompilation.map { it.runtimeDependencyFiles?.filter(File::isFile) })
+		.from(
+			testCompilation.map {
+				it.runtimeDependencyFiles?.filter(File::isFile)
+					?: it.project.files()
+			},
+		)
 
 	configureTasks(
 		project,

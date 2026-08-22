@@ -4,5 +4,5 @@ apply plugin: 'com.vanniktech.maven.publish'
 dependencies {
 	api project(':gradle-support')
 	compileOnly libs.kotlin.stdlib
-	compileOnly 'org.gradle.experimental:gradle-public-api:9.1.0'
+	compileOnly libs.gradle.minimum
 }

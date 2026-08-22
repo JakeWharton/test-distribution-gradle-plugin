@@ -6,6 +6,11 @@ kotlin-gradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", ve
 kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test" }
 
+# HEY! If you update the minimum-supported Gradle version check to see if the Kotlin language version or
+# Java targets below can be bumped. See https://docs.gradle.org/current/userguide/compatibility.html.
+gradle-minimum = "org.gradle.experimental:gradle-public-api:9.1.0"
+gradle-v9dot3 = "org.gradle.experimental:gradle-public-api:9.3.0"
+
 dokkaPlugin = "org.jetbrains.dokka:dokka-gradle-plugin:2.2.0"
 spotlessPlugin = "com.diffplug.spotless:spotless-plugin-gradle:8.10.0"
 gradleMavenPublishPlugin = "com.vanniktech:gradle-maven-publish-plugin:0.37.0"
