@@ -35,7 +35,7 @@ dependencies {
 	compileOnly libs.kotlin.gradlePlugin
 	compileOnly libs.android.gradlePlugin
 
-	testImplementation libs.junit
+	testImplementation libs.junit4
 	testImplementation libs.assertk
 	testImplementation libs.testParameterInjector
 

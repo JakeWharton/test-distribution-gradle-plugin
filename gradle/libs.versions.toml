@@ -12,7 +12,8 @@ gradleMavenPublishPlugin = "com.vanniktech:gradle-maven-publish-plugin:0.37.0"
 compatPlugin = "com.gradleup.tapmoc:tapmoc-gradle-plugin:0.4.2"
 buildConfigPlugin = "com.github.gmazzo.buildconfig:plugin:6.0.10"
 
-junit = "junit:junit:4.13.2"
+junit4 = "junit:junit:4.13.2"
+
 assertk = "com.willowtreeapps.assertk:assertk:0.28.1"
 testParameterInjector = "com.google.testparameterinjector:test-parameter-injector:1.22"
 ktlint = "com.pinterest.ktlint:ktlint-cli:1.8.0"
