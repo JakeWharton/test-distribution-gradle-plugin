@@ -60,7 +60,7 @@ internal fun configureAndroidPlugin(project: Project, gradleSupport: GradleSuppo
 
 					it.mainClass.set(
 						testClasses.elements.zip(testJars.elements) { classElements, jarElements ->
-							val testFqcns = gradleSupport.detectTestClassNames(
+							val testFqcns = gradleSupport.detectJunit4TestClassNames(
 								testClasses.asFileTree,
 								classElements.map(FileSystemLocation::getAsFile),
 								jarElements.map(FileSystemLocation::getAsFile),
