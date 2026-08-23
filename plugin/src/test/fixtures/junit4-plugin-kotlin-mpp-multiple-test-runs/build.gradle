@@ -1,0 +1,55 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
+
+buildscript {
+	dependencies {
+		classpath "com.jakewharton.gradle:test-distribution-gradle-plugin:$testDistributionVersion"
+		classpath libs.kotlin.gradlePlugin
+	}
+
+	repositories {
+		maven {
+			url "file://${rootDir.absolutePath}/../../../../../build/localMaven"
+		}
+		mavenCentral()
+	}
+}
+
+apply plugin: 'org.jetbrains.kotlin.multiplatform'
+apply plugin: 'com.jakewharton.test-distribution'
+
+kotlin {
+	jvm {
+		testRuns.create("integration")
+	}
+
+	linuxArm64()
+	linuxX64()
+	macosArm64()
+	macosX64()
+	mingwX64()
+
+	sourceSets {
+		commonTest {
+			dependencies {
+				implementation(libs.kotlin.test)
+			}
+		}
+		jvmTest {
+			dependencies {
+				implementation(libs.kotlin.test.junit)
+			}
+		}
+	}
+}
+
+tasks.withType(JavaCompile).configureEach {
+	sourceCompatibility = '11'
+	sourceCompatibility = '11'
+}
+
+tasks.withType(KotlinJvmCompile).configureEach {
+	compilerOptions {
+		jvmTarget = JvmTarget.JVM_11
+	}
+}
