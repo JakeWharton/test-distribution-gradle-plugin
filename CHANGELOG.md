@@ -3,6 +3,9 @@
 ## [Unreleased]
 [Unreleased]: https://github.com/JakeWharton/test-distribution-gradle-plugin/compare/0.3.0...HEAD
 
+Added:
+- Support for multiple JVM test runs for Kotlin multiplatform plugin.
+
 Fixed:
 - Android distribution tasks are now compatible with configuration cache.
 
