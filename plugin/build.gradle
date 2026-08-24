@@ -29,7 +29,6 @@ tasks.named('validatePlugins') {
 }
 
 dependencies {
-	implementation project(':gradle-support-9-1')
 	implementation project(':gradle-support-9-3')
 
 	compileOnly libs.gradle.minimum
@@ -61,16 +60,16 @@ buildConfig {
 		topLevelConstants = true
 	}
 
+	buildConfigField(String, 'MINIMUM_GRADLE_VERSION', minimumGradleVersion)
+
 	sourceSets.getByName('test') {
 		buildConfigField(String, "PLUGIN_VERSION", VERSION_NAME)
-		buildConfigField(String, 'MINIMUM_GRADLE_VERSION', minimumGradleVersion)
 	}
 }
 
 tasks.withType(Test).configureEach {
 	maxHeapSize = '1g'
 	dependsOn(':gradle-support:publishAllPublicationsToTestingRepository')
-	dependsOn(':gradle-support-9-1:publishAllPublicationsToTestingRepository')
 	dependsOn(':gradle-support-9-3:publishAllPublicationsToTestingRepository')
 	dependsOn(':plugin:publishAllPublicationsToTestingRepository')
 	inputs.dir('src/test/fixtures')

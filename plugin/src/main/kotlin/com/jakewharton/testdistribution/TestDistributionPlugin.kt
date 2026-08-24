@@ -9,7 +9,7 @@ public class TestDistributionPlugin : Plugin<Project> {
 		// HEY! If you update the minimum-supported Gradle version check to see if the Kotlin language version
 		// can be bumped. See https://docs.gradle.org/current/userguide/compatibility.html#kotlin.
 		val gradleVersion = GradleVersion.current()
-		val gradleMinimum = GradleVersion.version("9.0")
+		val gradleMinimum = GradleVersion.version(MINIMUM_GRADLE_VERSION)
 		val gradleSupport = when {
 			gradleVersion < gradleMinimum -> {
 				error("Test distribution plugin requires $gradleMinimum or newer. Found $gradleVersion")
@@ -17,7 +17,7 @@ public class TestDistributionPlugin : Plugin<Project> {
 
 			gradleVersion >= GradleVersion.version("9.3") -> GradleSupport_9_3()
 
-			else -> GradleSupport_9_0()
+			else -> GradleSupportMinimum()
 		}
 
 		var gotPlugin = false
