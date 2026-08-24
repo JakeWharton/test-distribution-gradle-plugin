@@ -12,8 +12,7 @@ import org.gradle.api.internal.tasks.testing.detection.ClassFileExtractionManage
 import org.gradle.api.internal.tasks.testing.detection.DefaultTestClassScanner
 import org.gradle.api.internal.tasks.testing.junit.JUnitDetector
 
-@Suppress("ClassName")
-class GradleSupport_9_0 : GradleSupport {
+class GradleSupportMinimum : GradleSupport {
 	override fun detectJunit4TestClassNames(
 		testClasses: FileTree,
 		testClassDirectories: List<File>,

@@ -1,6 +1,5 @@
 rootProject.name = 'test-distribution-gradle-plugin'
 
 include ':gradle-support'
-include ':gradle-support-9-1'
 include ':gradle-support-9-3'
 include ':plugin'
