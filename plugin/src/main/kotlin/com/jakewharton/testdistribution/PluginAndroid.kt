@@ -38,8 +38,13 @@ internal fun configureAndroidPlugin(project: Project, gradleSupport: GradleSuppo
 					ScopedArtifactDummyTask::classDirs,
 				)
 
+			val testClasses = project.objects.fileCollection()
+				.from(dummyClassesProvider.flatMap(ScopedArtifactDummyTask::classDirs))
+			val testJars = project.objects.fileCollection()
+				.from(dummyClassesProvider.flatMap(ScopedArtifactDummyTask::jars))
+
 			val testJarProvider = project.tasks.register("jar$nameUpper", Jar::class.java) {
-				it.from(dummyClassesProvider.flatMap(ScopedArtifactDummyTask::classDirs))
+				it.from(testClasses)
 				it.archiveAppendix.set(variant.name)
 				it.archiveClassifier.set(testName)
 			}
@@ -51,12 +56,7 @@ internal fun configureAndroidPlugin(project: Project, gradleSupport: GradleSuppo
 
 					it.classpath = project.objects.fileCollection()
 						.from(testJarProvider.map { it.outputs.files })
-						.from(dummyClassesProvider.flatMap { it.jars })
-
-					val testClasses = project.objects.fileCollection()
-						.from(dummyClassesProvider.flatMap(ScopedArtifactDummyTask::classDirs))
-					val testJars = project.objects.fileCollection()
-						.from(dummyClassesProvider.flatMap(ScopedArtifactDummyTask::jars))
+						.from(testJars)
 
 					it.mainClass.set(
 						testClasses.elements.zip(testJars.elements) { classElements, jarElements ->
