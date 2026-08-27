@@ -20,9 +20,15 @@ buildConfigPlugin = "com.github.gmazzo.buildconfig:plugin:6.0.10"
 
 junit4 = "junit:junit:4.13.2"
 
+junitJupiter-engine = "org.junit.jupiter:junit-jupiter-engine:5.14.4"
+junitPlatform-console = "org.junit.platform:junit-platform-console:1.14.4"
+
 assertk = "com.willowtreeapps.assertk:assertk:0.28.1"
 testParameterInjector = "com.google.testparameterinjector:test-parameter-injector:1.22"
 ktlint = "com.pinterest.ktlint:ktlint-cli:1.8.0"
 
-android-gradlePlugin = "com.android.tools.build:gradle:9.0.1"
+android-gradlePlugin = "com.android.tools.build:gradle:9.0.0"
+android-gradlePlugin-minimum = "com.android.tools.build:gradle-api:9.0.0"
+android-gradlePlugin-v9dot5 = "com.android.tools.build:gradle-api:9.5.0-alpha02"
+
 androidx-gradlePluginLints = "androidx.lint:lint-gradle:1.0.0"

@@ -6,6 +6,7 @@
 	packageRules: [
 		{
 			packagePatterns: [
+				'^com.android.tools.build',
 				'^org.gradle.experimental:gradle-public-api',
 			],
 			enabled: false,

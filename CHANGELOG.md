@@ -5,6 +5,7 @@
 
 Added:
 - Support for multiple JVM test runs for Kotlin multiplatform plugin.
+- Support for the JUnit Platform.
 
 Fixed:
 - Android distribution tasks are now compatible with configuration cache.

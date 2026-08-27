@@ -4,17 +4,18 @@ import java.io.File
 import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.api.file.FileCollection
-import org.gradle.api.file.FileSystemLocation
 import org.gradle.api.plugins.BasePluginExtension
 import org.gradle.api.plugins.JavaPlugin.COMPILE_TEST_JAVA_TASK_NAME
 import org.gradle.api.plugins.JavaPlugin.JAR_TASK_NAME
 import org.gradle.api.plugins.JavaPlugin.TEST_RUNTIME_CLASSPATH_CONFIGURATION_NAME
+import org.gradle.api.plugins.JavaPlugin.TEST_TASK_NAME
 import org.gradle.api.tasks.Copy
 import org.gradle.api.tasks.TaskProvider
 import org.gradle.api.tasks.application.CreateStartScripts
 import org.gradle.api.tasks.bundling.Jar
 import org.gradle.api.tasks.bundling.Zip
 import org.gradle.api.tasks.compile.JavaCompile
+import org.gradle.api.tasks.testing.Test
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinCompilation.Companion.TEST_COMPILATION_NAME
 
@@ -133,22 +134,16 @@ private fun configureTasks(
 	testScriptsProvider: TaskProvider<CreateStartScripts>,
 	installProvider: TaskProvider<Copy>,
 ) {
+	val testFrameworkProvider = project.tasks.named(TEST_TASK_NAME, Test::class.java)
+		.toTestFramework()
+
 	testScriptsProvider.configure {
 		it.classpath = project.objects.fileCollection()
 			.from(mainJarProvider.map { it.outputs.files })
 			.from(testJarProvider.map { it.outputs.files })
 			.from(testDependencies)
 
-		it.mainClass.set(
-			testClasses.elements.zip(testDependencies.elements) { classElements, dependencyElements ->
-				val testFqcns = gradleSupport.detectJunit4TestClassNames(
-					testClasses.asFileTree,
-					classElements.map(FileSystemLocation::getAsFile),
-					dependencyElements.map(FileSystemLocation::getAsFile),
-				).sorted()
-				"org.junit.runner.JUnitCore ${testFqcns.joinToString(" ") { """"$it"""" }}"
-			},
-		)
+		it.mainClass.set(computeMain(gradleSupport, testFrameworkProvider, testClasses, testDependencies))
 	}
 
 	installProvider.configure {
