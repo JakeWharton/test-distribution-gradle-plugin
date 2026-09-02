@@ -45,6 +45,20 @@ apply plugin: 'com.jakewharton.test-distribution'
 </p>
 </details>
 
+### Test engines
+
+This plugin supports both JUnit 4 and the JUnit Platform.
+It will automatically detect the engine in use and generate a compatible script.
+
+However, some engines do require additional support.
+
+#### JUnit Platform
+
+Traditionally the `junit-platform-launcher` artifact is declared on the `testRuntimeOnly` configuration.
+While this provides sufficient hooks for Gradle execution, it does not contain a traditional `main` method.
+Replace that artifact with `junit-platform-console` (which itself depends on `junit-platform-launcher`) to allow both script and Gradle/IDE execution to work.
+
+
 ### Compatibility
 
 This plugin relies on Gradle internal APIs.

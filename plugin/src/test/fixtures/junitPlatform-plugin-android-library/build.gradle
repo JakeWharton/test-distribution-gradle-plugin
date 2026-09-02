@@ -1,0 +1,39 @@
+buildscript {
+	dependencies {
+		classpath "com.jakewharton.gradle:test-distribution-gradle-plugin:$testDistributionVersion"
+		classpath libs.android.gradlePlugin
+	}
+
+	repositories {
+		maven {
+			url "file://${rootDir.absolutePath}/../../../../../build/localMaven"
+		}
+		mavenCentral()
+		google()
+	}
+}
+
+apply plugin: 'com.jakewharton.test-distribution'
+apply plugin: 'com.android.library'
+
+android {
+	namespace = 'com.example'
+	compileSdk = 36
+
+	defaultConfig {
+		minSdk = 24
+	}
+
+	testOptions {
+		unitTests {
+			all {
+				useJUnitPlatform()
+			}
+		}
+	}
+}
+
+dependencies {
+	testImplementation libs.junitJupiter.engine
+	testRuntimeOnly libs.junitPlatform.console
+}

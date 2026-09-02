@@ -29,6 +29,7 @@ tasks.named('validatePlugins') {
 }
 
 dependencies {
+	implementation project(':android-support-9-5')
 	implementation project(':gradle-support-9-3')
 
 	compileOnly libs.gradle.minimum
@@ -69,6 +70,8 @@ buildConfig {
 
 tasks.withType(Test).configureEach {
 	maxHeapSize = '1g'
+	dependsOn(':android-support:publishAllPublicationsToTestingRepository')
+	dependsOn(':android-support-9-5:publishAllPublicationsToTestingRepository')
 	dependsOn(':gradle-support:publishAllPublicationsToTestingRepository')
 	dependsOn(':gradle-support-9-3:publishAllPublicationsToTestingRepository')
 	dependsOn(':plugin:publishAllPublicationsToTestingRepository')

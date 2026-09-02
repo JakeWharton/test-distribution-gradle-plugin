@@ -4,8 +4,8 @@ import com.android.build.api.artifact.ScopedArtifact
 import com.android.build.api.variant.AndroidComponentsExtension
 import com.android.build.api.variant.HasHostTests
 import com.android.build.api.variant.ScopedArtifacts
+import com.android.builder.model.Version.ANDROID_GRADLE_PLUGIN_VERSION
 import org.gradle.api.Project
-import org.gradle.api.file.FileSystemLocation
 import org.gradle.api.plugins.BasePluginExtension
 import org.gradle.api.tasks.Copy
 import org.gradle.api.tasks.application.CreateStartScripts
@@ -13,6 +13,18 @@ import org.gradle.api.tasks.bundling.Zip
 import org.gradle.jvm.tasks.Jar
 
 internal fun configureAndroidPlugin(project: Project, gradleSupport: GradleSupport) {
+	val agpVersion = AgpVersion.parse(ANDROID_GRADLE_PLUGIN_VERSION)
+	val agpMinimum = AgpVersion.parse("9.0.0")
+	val androidSupport = when {
+		agpVersion < agpMinimum -> {
+			error("Test distribution plugin requires $agpMinimum or newer. Found $agpVersion")
+		}
+
+		agpVersion >= AgpVersion.parse("9.5.0-alpha02") -> AndroidSupport_9_5_alpha02()
+
+		else -> AndroidSupportMinimum()
+	}
+
 	val base = project.extensions.getByType(BasePluginExtension::class.java)
 
 	val androidComponents = project.extensions.getByType(AndroidComponentsExtension::class.java)
@@ -58,16 +70,10 @@ internal fun configureAndroidPlugin(project: Project, gradleSupport: GradleSuppo
 						.from(testJarProvider.map { it.outputs.files })
 						.from(testJars)
 
-					it.mainClass.set(
-						testClasses.elements.zip(testJars.elements) { classElements, jarElements ->
-							val testFqcns = gradleSupport.detectJunit4TestClassNames(
-								testClasses.asFileTree,
-								classElements.map(FileSystemLocation::getAsFile),
-								jarElements.map(FileSystemLocation::getAsFile),
-							).sorted()
-							"org.junit.runner.JUnitCore ${testFqcns.joinToString(" ") { """"$it"""" }}"
-						},
-					)
+					androidSupport.withTestProvider(project, hostTest) { testTask ->
+						val testFramework = testTask.toTestFramework()
+						it.mainClass.set(computeMain(gradleSupport, testFramework, testClasses, testJars))
+					}
 				}
 
 			val installProvider =

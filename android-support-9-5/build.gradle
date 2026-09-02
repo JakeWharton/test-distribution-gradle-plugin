@@ -1,0 +1,9 @@
+apply plugin: 'org.jetbrains.kotlin.jvm'
+apply plugin: 'com.vanniktech.maven.publish'
+
+dependencies {
+	api project(':android-support')
+	compileOnly libs.kotlin.stdlib
+	compileOnly libs.android.gradlePlugin.v9dot5
+	compileOnly libs.gradle.minimum
+}

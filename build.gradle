@@ -69,8 +69,7 @@ subprojects {
 	apply plugin: 'com.diffplug.spotless'
 	spotless {
 		kotlin {
-			target('**/*.kt')
-			targetExclude('**/src/test/test-build-logic/build/**', '**/generated-sources/**')
+			target('src/**/*.kt')
 			ktlint(libs.ktlint.get().version).editorConfigOverride([
 				'ktlint_standard_filename'                : 'disabled',
 				// Making something an expression body should be a choice around readability.

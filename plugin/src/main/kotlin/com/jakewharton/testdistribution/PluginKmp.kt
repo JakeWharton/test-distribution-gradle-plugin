@@ -2,7 +2,6 @@ package com.jakewharton.testdistribution
 
 import java.io.File
 import org.gradle.api.Project
-import org.gradle.api.file.FileSystemLocation
 import org.gradle.api.plugins.BasePluginExtension
 import org.gradle.api.tasks.Copy
 import org.gradle.api.tasks.application.CreateStartScripts
@@ -21,6 +20,7 @@ internal fun configureKotlinMultiplatformPlugin(project: Project, gradleSupport:
 			val name = target.name + testRun.name.replaceFirstChar(Char::uppercase)
 			val nameUpper = name.replaceFirstChar(Char::uppercase)
 
+			val testFramework = testRun.executionTask.toTestFramework()
 			val testClasses = testRun.executionSource.testClassesDirs
 			val testDependencies = testRun.executionSource.classpath.filter(File::isFile)
 
@@ -39,16 +39,7 @@ internal fun configureKotlinMultiplatformPlugin(project: Project, gradleSupport:
 					.from(testJarProvider.map { it.outputs.files })
 					.from(testDependencies)
 
-				it.mainClass.set(
-					testClasses.elements.zip(testDependencies.elements) { classElements, dependencyElements ->
-						val testFqcns = gradleSupport.detectJunit4TestClassNames(
-							testClasses.asFileTree,
-							classElements.map(FileSystemLocation::getAsFile),
-							dependencyElements.map(FileSystemLocation::getAsFile),
-						).sorted()
-						"org.junit.runner.JUnitCore ${testFqcns.joinToString(" ") { """"$it"""" }}"
-					},
-				)
+				it.mainClass.set(computeMain(gradleSupport, testFramework, testClasses, testDependencies))
 			}
 
 			val installProvider = project.tasks.register("install${nameUpper}Distribution", Copy::class.java) {
