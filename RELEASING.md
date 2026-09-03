@@ -35,7 +35,7 @@
 8. Push!
 
    ```
-   $ git push && git push --tags
+   $ git push --follow-tags
    ```
 
    This will trigger a GitHub Action workflow which will create a GitHub release and push to Maven Central.
