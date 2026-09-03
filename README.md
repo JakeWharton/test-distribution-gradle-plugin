@@ -15,7 +15,7 @@ buildscript {
     mavenCentral()
   }
   dependencies {
-    classpath 'com.jakewharton.gradle:test-distribution-gradle-plugin:0.3.0'
+    classpath 'com.jakewharton.gradle:test-distribution-gradle-plugin:0.4.0'
   }
 }
 
@@ -35,7 +35,7 @@ buildscript {
     }
   }
   dependencies {
-    classpath 'com.jakewharton.gradle:test-distribution-gradle-plugin:0.3.0-SNAPSHOT'
+    classpath 'com.jakewharton.gradle:test-distribution-gradle-plugin:0.5.0-SNAPSHOT'
   }
 }
 
@@ -66,8 +66,9 @@ As such, certain versions of the plugin only work with certain versions of Gradl
 
 | Gradle        | Plugin        |
 |---------------|---------------|
-| 9.3.0         | 0.3.0         |
-| 9.1.0 - 9.2.1 | 0.2.0 - 0.3.0 |
+| 9.4.0 - 9.7.1 | 0.4.0         |
+| 9.3.0         | 0.3.0 - 0.4.0 |
+| 9.1.0 - 9.2.1 | 0.2.0 - 0.4.0 |
 | 9.0.0         | 0.2.0         |
 | 8.10 - 8.14.3 | 0.1.0 - 0.2.0 |
 
