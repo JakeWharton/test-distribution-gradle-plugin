@@ -248,6 +248,25 @@ class TestDistributionPluginFixtureTest(
 		)
 	}
 
+	@Test fun junitPlatformPluginKotlinMpp() {
+		val name = "junitPlatform-plugin-kotlin-mpp"
+		val fixtureDir = File(fixturesDir, name)
+		createRunner(fixtureDir, "check", "installJvmTest").build()
+
+		val installDir = fixtureDir.resolve("build/install/jvmTest")
+		assertThat(installDir).isDirectory()
+
+		val binaryFile = installDir.resolve("bin/$name-test")
+		assertThat(binaryFile.readText())
+			.contains("org.junit.platform.console.ConsoleLauncher")
+
+		val libDir = installDir.resolve("lib")
+		assertThat(libDir.list()).containsAtLeast(
+			"$name-jvm.jar",
+			"$name-jvm-test.jar",
+		)
+	}
+
 	private fun createRunner(fixtureDir: File, vararg tasks: String): GradleRunner {
 		val gradleRoot = File(fixtureDir, "gradle").also { it.mkdir() }
 		File("../gradle/wrapper").copyRecursively(File(gradleRoot, "wrapper"), true)
