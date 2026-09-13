@@ -3,7 +3,8 @@
 ## [Unreleased]
 [Unreleased]: https://github.com/JakeWharton/test-distribution-gradle-plugin/compare/0.4.0...HEAD
 
-Nothing yet!
+Fixed:
+- Change test framework lookup to not cause test task to actually execute in order to install or produce distribution.
 
 
 ## [0.4.0] - 2026-09-02

@@ -12,12 +12,16 @@ internal enum class TestFramework {
 	JunitPlatform,
 }
 
-internal fun Provider<out Test>.toTestFramework(): Provider<TestFramework> = map {
-	when (it.options) {
-		is JUnitOptions -> TestFramework.Junit4
-		is JUnitPlatformOptions -> TestFramework.JunitPlatform
-		else -> error("Unsupported test framework: ${it.options::class.java}")
-	}
+internal fun Provider<out Test>.toTestFramework(): Provider<TestFramework> {
+	return flatMap(Test::getTestFrameworkProperty)
+		.map { testFramework ->
+			@Suppress("InternalGradleApiUsage") // Don't know any other way to get this.
+			when (val options = testFramework.options) {
+				is JUnitOptions -> TestFramework.Junit4
+				is JUnitPlatformOptions -> TestFramework.JunitPlatform
+				else -> error("Unsupported test framework: ${options::class.java}")
+			}
+		}
 }
 
 internal fun computeMain(

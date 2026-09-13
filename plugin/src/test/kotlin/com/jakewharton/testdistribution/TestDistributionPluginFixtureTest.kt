@@ -4,6 +4,7 @@ import assertk.assertThat
 import assertk.assertions.contains
 import assertk.assertions.containsAtLeast
 import assertk.assertions.isDirectory
+import assertk.assertions.isNull
 import com.google.testing.junit.testparameterinjector.TestParameter
 import com.google.testing.junit.testparameterinjector.TestParameterInjector
 import java.io.File
@@ -27,7 +28,9 @@ class TestDistributionPluginFixtureTest(
 	@Test fun junit4PluginAndroidApplication() {
 		val name = "junit4-plugin-android-application"
 		val fixtureDir = File(fixturesDir, name)
-		createRunner(fixtureDir, "check", "installDebugUnitTestDistribution").build()
+		val buildResult = createRunner(fixtureDir, "installDebugUnitTestDistribution").build()
+
+		assertThat(buildResult.task(":testDebugUnitTest")).isNull()
 
 		val installDir = fixtureDir.resolve("build/install/debugUnitTest")
 		assertThat(installDir).isDirectory()
@@ -46,7 +49,9 @@ class TestDistributionPluginFixtureTest(
 	@Test fun junit4PluginAndroidLibrary() {
 		val name = "junit4-plugin-android-library"
 		val fixtureDir = File(fixturesDir, name)
-		createRunner(fixtureDir, "check", "installDebugUnitTestDistribution").build()
+		val buildResult = createRunner(fixtureDir, "installDebugUnitTestDistribution").build()
+
+		assertThat(buildResult.task(":testUnitTestDebug")).isNull()
 
 		val installDir = fixtureDir.resolve("build/install/debugUnitTest")
 		assertThat(installDir).isDirectory()
@@ -65,7 +70,9 @@ class TestDistributionPluginFixtureTest(
 	@Test fun junit4PluginJavaApplication() {
 		val name = "junit4-plugin-java-application"
 		val fixtureDir = File(fixturesDir, name)
-		createRunner(fixtureDir, "check", "installTestDistribution").build()
+		val buildResult = createRunner(fixtureDir, "installTestDistribution").build()
+
+		assertThat(buildResult.task(":test")).isNull()
 
 		val installDir = fixtureDir.resolve("build/install/test")
 		assertThat(installDir).isDirectory()
@@ -84,7 +91,9 @@ class TestDistributionPluginFixtureTest(
 	@Test fun junit4PluginJavaLibrary() {
 		val name = "junit4-plugin-java-library"
 		val fixtureDir = File(fixturesDir, name)
-		createRunner(fixtureDir, "check", "installTestDistribution").build()
+		val buildResult = createRunner(fixtureDir, "installTestDistribution").build()
+
+		assertThat(buildResult.task(":test")).isNull()
 
 		val installDir = fixtureDir.resolve("build/install/test")
 		assertThat(installDir).isDirectory()
@@ -103,7 +112,9 @@ class TestDistributionPluginFixtureTest(
 	@Test fun junit4PluginJavaLibraryWithKotlin() {
 		val name = "junit4-plugin-java-library-with-kotlin"
 		val fixtureDir = File(fixturesDir, name)
-		createRunner(fixtureDir, "check", "installTestDistribution").build()
+		val buildResult = createRunner(fixtureDir, "installTestDistribution").build()
+
+		assertThat(buildResult.task(":test")).isNull()
 
 		val installDir = fixtureDir.resolve("build/install/test")
 		assertThat(installDir).isDirectory()
@@ -122,7 +133,9 @@ class TestDistributionPluginFixtureTest(
 	@Test fun junit4PluginKotlinMpp() {
 		val name = "junit4-plugin-kotlin-mpp"
 		val fixtureDir = File(fixturesDir, name)
-		createRunner(fixtureDir, "check", "installJvmTestDistribution").build()
+		val buildResult = createRunner(fixtureDir, "installJvmTestDistribution").build()
+
+		assertThat(buildResult.task(":jvmTest")).isNull()
 
 		val installDir = fixtureDir.resolve("build/install/jvmTest")
 		assertThat(installDir).isDirectory()
@@ -141,7 +154,10 @@ class TestDistributionPluginFixtureTest(
 	@Test fun junit4PluginKotlinMppMultipleTestRuns() {
 		val name = "junit4-plugin-kotlin-mpp-multiple-test-runs"
 		val fixtureDir = File(fixturesDir, name)
-		createRunner(fixtureDir, "check", "installJvmTestDistribution", "installJvmIntegrationDistribution").build()
+		val buildResult = createRunner(fixtureDir, "installJvmTestDistribution", "installJvmIntegrationDistribution").build()
+
+		assertThat(buildResult.task(":jvmTest")).isNull()
+		assertThat(buildResult.task(":jvmIntegration")).isNull()
 
 		val testInstallDir = fixtureDir.resolve("build/install/jvmTest")
 		assertThat(testInstallDir).isDirectory()
@@ -173,7 +189,7 @@ class TestDistributionPluginFixtureTest(
 	@Test fun junit4PluginKotlinMppTargetName() {
 		val name = "junit4-plugin-kotlin-mpp-target-name"
 		val fixtureDir = File(fixturesDir, name)
-		createRunner(fixtureDir, "check", "installDesktopTestDistribution").build()
+		createRunner(fixtureDir, "installDesktopTestDistribution").build()
 
 		val installDir = fixtureDir.resolve("build/install/desktopTest")
 		assertThat(installDir).isDirectory()
@@ -192,7 +208,7 @@ class TestDistributionPluginFixtureTest(
 	@Test fun junit4PluginKotlinMppWithAndroid() {
 		val name = "junit4-plugin-kotlin-mpp-with-android"
 		val fixtureDir = File(fixturesDir, name)
-		createRunner(fixtureDir, "check", "installJvmTestDistribution").build()
+		createRunner(fixtureDir, "installJvmTestDistribution").build()
 
 		val installDir = fixtureDir.resolve("build/install/jvmTest")
 		assertThat(installDir).isDirectory()
@@ -213,7 +229,9 @@ class TestDistributionPluginFixtureTest(
 	@Test fun junitPlatformPluginAndroidLibrary() {
 		val name = "junitPlatform-plugin-android-library"
 		val fixtureDir = File(fixturesDir, name)
-		createRunner(fixtureDir, "check", "installDebugUnitTestDistribution").build()
+		val buildResult = createRunner(fixtureDir, "installDebugUnitTestDistribution").build()
+
+		assertThat(buildResult.task(":testDebugUnitTest")).isNull()
 
 		val installDir = fixtureDir.resolve("build/install/debugUnitTest")
 		assertThat(installDir).isDirectory()
@@ -232,7 +250,9 @@ class TestDistributionPluginFixtureTest(
 	@Test fun junitPlatformPluginJavaLibrary() {
 		val name = "junitPlatform-plugin-java-library"
 		val fixtureDir = File(fixturesDir, name)
-		createRunner(fixtureDir, "check", "installTest").build()
+		val buildResult = createRunner(fixtureDir, "installTest").build()
+
+		assertThat(buildResult.task(":test")).isNull()
 
 		val installDir = fixtureDir.resolve("build/install/test")
 		assertThat(installDir).isDirectory()
@@ -251,7 +271,9 @@ class TestDistributionPluginFixtureTest(
 	@Test fun junitPlatformPluginKotlinMpp() {
 		val name = "junitPlatform-plugin-kotlin-mpp"
 		val fixtureDir = File(fixturesDir, name)
-		createRunner(fixtureDir, "check", "installJvmTest").build()
+		val buildResult = createRunner(fixtureDir, "installJvmTest").build()
+
+		assertThat(buildResult.task(":jvmTest")).isNull()
 
 		val installDir = fixtureDir.resolve("build/install/jvmTest")
 		assertThat(installDir).isDirectory()
