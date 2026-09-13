@@ -1,7 +1,13 @@
 # Change log
 
 ## [Unreleased]
-[Unreleased]: https://github.com/JakeWharton/test-distribution-gradle-plugin/compare/0.4.0...HEAD
+[Unreleased]: https://github.com/JakeWharton/test-distribution-gradle-plugin/compare/0.4.1...HEAD
+
+Nothing yet!
+
+
+## [0.4.1] - 2026-09-13
+[0.4.1]: https://github.com/JakeWharton/test-distribution-gradle-plugin/releases/tag/0.4.1
 
 Fixed:
 - Change test framework lookup to not cause test task to actually execute in order to install or produce distribution.
