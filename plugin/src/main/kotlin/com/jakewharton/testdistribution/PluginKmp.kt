@@ -3,7 +3,7 @@ package com.jakewharton.testdistribution
 import java.io.File
 import org.gradle.api.Project
 import org.gradle.api.plugins.BasePluginExtension
-import org.gradle.api.tasks.Copy
+import org.gradle.api.tasks.Sync
 import org.gradle.api.tasks.application.CreateStartScripts
 import org.gradle.api.tasks.bundling.Jar
 import org.gradle.api.tasks.bundling.Zip
@@ -42,7 +42,7 @@ internal fun configureKotlinMultiplatformPlugin(project: Project, gradleSupport:
 				it.mainClass.set(computeMain(gradleSupport, testFramework, testClasses, testDependencies))
 			}
 
-			val installProvider = project.tasks.register("install${nameUpper}Distribution", Copy::class.java) {
+			val installProvider = project.tasks.register("install${nameUpper}Distribution", Sync::class.java) {
 				it.group = "distribution"
 				it.description = "Installs $name as a distribution as-is."
 

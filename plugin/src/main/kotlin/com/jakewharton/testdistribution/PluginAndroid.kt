@@ -7,7 +7,7 @@ import com.android.build.api.variant.ScopedArtifacts
 import com.android.builder.model.Version.ANDROID_GRADLE_PLUGIN_VERSION
 import org.gradle.api.Project
 import org.gradle.api.plugins.BasePluginExtension
-import org.gradle.api.tasks.Copy
+import org.gradle.api.tasks.Sync
 import org.gradle.api.tasks.application.CreateStartScripts
 import org.gradle.api.tasks.bundling.Zip
 import org.gradle.jvm.tasks.Jar
@@ -77,7 +77,7 @@ internal fun configureAndroidPlugin(project: Project, gradleSupport: GradleSuppo
 				}
 
 			val installProvider =
-				project.tasks.register("install${nameUpper}Distribution", Copy::class.java) {
+				project.tasks.register("install${nameUpper}Distribution", Sync::class.java) {
 					it.group = "distribution"
 					it.description = "Installs $name as a distribution as-is."
 

@@ -9,7 +9,7 @@ import org.gradle.api.plugins.JavaPlugin.COMPILE_TEST_JAVA_TASK_NAME
 import org.gradle.api.plugins.JavaPlugin.JAR_TASK_NAME
 import org.gradle.api.plugins.JavaPlugin.TEST_RUNTIME_CLASSPATH_CONFIGURATION_NAME
 import org.gradle.api.plugins.JavaPlugin.TEST_TASK_NAME
-import org.gradle.api.tasks.Copy
+import org.gradle.api.tasks.Sync
 import org.gradle.api.tasks.TaskProvider
 import org.gradle.api.tasks.application.CreateStartScripts
 import org.gradle.api.tasks.bundling.Jar
@@ -34,7 +34,7 @@ internal fun configureJavaPlugin(project: Project, gradleSupport: GradleSupport)
 		it.applicationName = base.archivesName.get() + "-test"
 	}
 
-	val installProvider = project.tasks.register("install${nameUpper}Distribution", Copy::class.java) {
+	val installProvider = project.tasks.register("install${nameUpper}Distribution", Sync::class.java) {
 		it.group = "distribution"
 		it.description = "Installs $name as a distribution as-is."
 		it.destinationDir = project.layout.buildDirectory.dir("install/$name").get().asFile
@@ -63,7 +63,7 @@ private fun finishKotlinPlugin(
 	gradleSupport: GradleSupport,
 	testJarProvider: TaskProvider<Jar>,
 	testScriptsProvider: TaskProvider<CreateStartScripts>,
-	installProvider: TaskProvider<Copy>,
+	installProvider: TaskProvider<Sync>,
 ) {
 	val kotlin = project.extensions.getByType(KotlinJvmExtension::class.java)
 	val target = kotlin.target
@@ -98,7 +98,7 @@ private fun finishJavaPlugin(
 	gradleSupport: GradleSupport,
 	testJarProvider: TaskProvider<Jar>,
 	testScriptsProvider: TaskProvider<CreateStartScripts>,
-	installProvider: TaskProvider<Copy>,
+	installProvider: TaskProvider<Sync>,
 ) {
 	val mainJarProvider = project.tasks.named(JAR_TASK_NAME)
 
@@ -132,7 +132,7 @@ private fun configureTasks(
 	testDependencies: FileCollection,
 	testJarProvider: TaskProvider<Jar>,
 	testScriptsProvider: TaskProvider<CreateStartScripts>,
-	installProvider: TaskProvider<Copy>,
+	installProvider: TaskProvider<Sync>,
 ) {
 	val testFrameworkProvider = project.tasks.named(TEST_TASK_NAME, Test::class.java)
 		.toTestFramework()
