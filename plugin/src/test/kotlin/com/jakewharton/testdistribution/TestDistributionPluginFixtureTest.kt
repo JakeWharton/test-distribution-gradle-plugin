@@ -1,6 +1,7 @@
 package com.jakewharton.testdistribution
 
 import assertk.Assert
+import assertk.all
 import assertk.assertThat
 import assertk.assertions.contains
 import assertk.assertions.isDirectory
@@ -248,8 +249,10 @@ class TestDistributionPluginFixtureTest(
 		assertThat(installDir).isDirectory()
 
 		val binaryFile = installDir.resolve("bin/$name-test")
-		assertThat(binaryFile.readText())
-			.contains("org.junit.platform.console.ConsoleLauncher")
+		assertThat(binaryFile.readText()).all {
+			contains("org.junit.platform.console.ConsoleLauncher")
+			contains($$"""--scan-classpath "$APP_HOME/lib/$$name-debug-unitTest.jar"""")
+		}
 
 		assertThat(runScript(binaryFile))
 			.contains("AddTest", "1 tests successful")
@@ -267,8 +270,10 @@ class TestDistributionPluginFixtureTest(
 		assertThat(installDir).isDirectory()
 
 		val binaryFile = installDir.resolve("bin/$name-test")
-		assertThat(binaryFile.readText())
-			.contains("org.junit.platform.console.ConsoleLauncher")
+		assertThat(binaryFile.readText()).all {
+			contains("org.junit.platform.console.ConsoleLauncher")
+			contains($$"""--scan-classpath "$APP_HOME/lib/$$name-tests.jar"""")
+		}
 
 		assertThat(runScript(binaryFile))
 			.contains("AddTest", "1 tests successful")
@@ -286,8 +291,10 @@ class TestDistributionPluginFixtureTest(
 		assertThat(installDir).isDirectory()
 
 		val binaryFile = installDir.resolve("bin/$name-test")
-		assertThat(binaryFile.readText())
-			.contains("org.junit.platform.console.ConsoleLauncher")
+		assertThat(binaryFile.readText()).all {
+			contains("org.junit.platform.console.ConsoleLauncher")
+			contains($$"""--scan-classpath "$APP_HOME/lib/$$name-jvm-test.jar"""")
+		}
 
 		assertThat(runScript(binaryFile))
 			.contains("AddTest", "SubTest", "2 tests successful")
