@@ -108,10 +108,6 @@ private fun finishJavaPlugin(
 	val testDependencies = project.objects.fileCollection()
 		.from(project.configurations.named(TEST_RUNTIME_CLASSPATH_CONFIGURATION_NAME))
 
-	testJarProvider.configure {
-		it.from(testClasses)
-	}
-
 	configureTasks(
 		project,
 		gradleSupport,
@@ -136,6 +132,10 @@ private fun configureTasks(
 ) {
 	val testFrameworkProvider = project.tasks.named(TEST_TASK_NAME, Test::class.java)
 		.toTestFramework()
+
+	testJarProvider.configure {
+		it.from(testClasses)
+	}
 
 	testScriptsProvider.configure {
 		it.classpath = project.objects.fileCollection()

@@ -3,14 +3,15 @@ package com.jakewharton.testdistribution
 import assertk.Assert
 import assertk.assertThat
 import assertk.assertions.contains
-import assertk.assertions.containsAtLeast
 import assertk.assertions.isDirectory
 import assertk.assertions.isEqualTo
 import assertk.assertions.isNotNull
 import assertk.assertions.isNull
+import assertk.assertions.isZero
 import assertk.assertions.prop
 import com.google.testing.junit.testparameterinjector.TestParameter
 import com.google.testing.junit.testparameterinjector.TestParameterInjector
+import java.io.BufferedReader
 import java.io.File
 import org.gradle.testkit.runner.BuildTask
 import org.gradle.testkit.runner.GradleRunner
@@ -46,11 +47,8 @@ class TestDistributionPluginFixtureTest(
 		assertThat(binaryFile.readText())
 			.contains("""org.junit.runner.JUnitCore "com.example.AddTest"""")
 
-		val libDir = installDir.resolve("lib")
-		assertThat(libDir.list()).containsAtLeast(
-			"classes.jar",
-			"$name-debug-unitTest.jar",
-		)
+		assertThat(runScript(binaryFile))
+			.contains("OK (1 test)")
 	}
 
 	@Test fun junit4PluginAndroidLibrary() {
@@ -68,11 +66,8 @@ class TestDistributionPluginFixtureTest(
 		assertThat(binaryFile.readText())
 			.contains("""org.junit.runner.JUnitCore "com.example.AddTest"""")
 
-		val libDir = installDir.resolve("lib")
-		assertThat(libDir.list()).containsAtLeast(
-			"classes.jar",
-			"$name-debug-unitTest.jar",
-		)
+		assertThat(runScript(binaryFile))
+			.contains("OK (1 test)")
 	}
 
 	@Test fun junit4PluginJavaApplication() {
@@ -90,11 +85,8 @@ class TestDistributionPluginFixtureTest(
 		assertThat(binaryFile.readText())
 			.contains("""org.junit.runner.JUnitCore "com.example.AddTest"""")
 
-		val libDir = installDir.resolve("lib")
-		assertThat(libDir.list()).containsAtLeast(
-			"$name.jar",
-			"$name-tests.jar",
-		)
+		assertThat(runScript(binaryFile))
+			.contains("OK (1 test)")
 	}
 
 	@Test fun junit4PluginJavaLibrary() {
@@ -112,11 +104,8 @@ class TestDistributionPluginFixtureTest(
 		assertThat(binaryFile.readText())
 			.contains("""org.junit.runner.JUnitCore "com.example.AddTest"""")
 
-		val libDir = installDir.resolve("lib")
-		assertThat(libDir.list()).containsAtLeast(
-			"$name.jar",
-			"$name-tests.jar",
-		)
+		assertThat(runScript(binaryFile))
+			.contains("OK (1 test)")
 	}
 
 	@Test fun junit4PluginJavaLibraryWithKotlin() {
@@ -134,11 +123,8 @@ class TestDistributionPluginFixtureTest(
 		assertThat(binaryFile.readText())
 			.contains("""org.junit.runner.JUnitCore "com.example.AddTest" "com.example.SubTest"""")
 
-		val libDir = installDir.resolve("lib")
-		assertThat(libDir.list()).containsAtLeast(
-			"$name.jar",
-			"$name-tests.jar",
-		)
+		assertThat(runScript(binaryFile))
+			.contains("OK (2 tests)")
 	}
 
 	@Test fun junit4PluginKotlinMpp() {
@@ -156,11 +142,8 @@ class TestDistributionPluginFixtureTest(
 		assertThat(binaryFile.readText())
 			.contains("""org.junit.runner.JUnitCore "com.example.AddTest" "com.example.SubTest"""")
 
-		val libDir = installDir.resolve("lib")
-		assertThat(libDir.list()).containsAtLeast(
-			"$name-jvm.jar",
-			"$name-jvm-test.jar",
-		)
+		assertThat(runScript(binaryFile))
+			.contains("OK (2 tests)")
 	}
 
 	@Test fun junit4PluginKotlinMppMultipleTestRuns() {
@@ -180,11 +163,8 @@ class TestDistributionPluginFixtureTest(
 		assertThat(testBinaryFile.readText())
 			.contains("""org.junit.runner.JUnitCore "com.example.AddTest"""")
 
-		val testLibDir = testInstallDir.resolve("lib")
-		assertThat(testLibDir.list()).containsAtLeast(
-			"$name-jvm.jar",
-			"$name-jvm-test.jar",
-		)
+		assertThat(runScript(testBinaryFile))
+			.contains("OK (2 tests)")
 
 		val integrationInstallDir = fixtureDir.resolve("build/install/jvmIntegration")
 		assertThat(integrationInstallDir).isDirectory()
@@ -193,11 +173,8 @@ class TestDistributionPluginFixtureTest(
 		assertThat(integrationBinaryFile.readText())
 			.contains("""org.junit.runner.JUnitCore "com.example.AddTest"""")
 
-		val integrationLibDir = integrationInstallDir.resolve("lib")
-		assertThat(integrationLibDir.list()).containsAtLeast(
-			"$name-jvm.jar",
-			"$name-jvm-integration.jar",
-		)
+		assertThat(runScript(integrationBinaryFile))
+			.contains("OK (2 tests)")
 	}
 
 	@Test fun junit4PluginKotlinMppTargetName() {
@@ -214,11 +191,8 @@ class TestDistributionPluginFixtureTest(
 		assertThat(binaryFile.readText())
 			.contains("""org.junit.runner.JUnitCore "com.example.AddTest"""")
 
-		val libDir = installDir.resolve("lib")
-		assertThat(libDir.list()).containsAtLeast(
-			"$name-desktop.jar",
-			"$name-desktop-test.jar",
-		)
+		assertThat(runScript(binaryFile))
+			.contains("OK (1 test)")
 	}
 
 	@Test fun junit4PluginKotlinMppWithAndroid() {
@@ -235,11 +209,8 @@ class TestDistributionPluginFixtureTest(
 		assertThat(binaryFile.readText())
 			.contains("""org.junit.runner.JUnitCore "com.example.AddTest"""")
 
-		val libDir = installDir.resolve("lib")
-		assertThat(libDir.list()).containsAtLeast(
-			"$name-jvm.jar",
-			"$name-jvm-test.jar",
-		)
+		assertThat(runScript(binaryFile))
+			.contains("OK (1 test)")
 
 		// TODO We should build Android as well.
 	}
@@ -259,11 +230,8 @@ class TestDistributionPluginFixtureTest(
 		assertThat(binaryFile.readText())
 			.contains("org.junit.platform.console.ConsoleLauncher")
 
-		val libDir = installDir.resolve("lib")
-		assertThat(libDir.list()).containsAtLeast(
-			"classes.jar",
-			"$name-debug-unitTest.jar",
-		)
+		assertThat(runScript(binaryFile))
+			.contains("AddTest", "1 tests successful")
 	}
 
 	@Test fun junitPlatformPluginJavaLibrary() {
@@ -281,11 +249,8 @@ class TestDistributionPluginFixtureTest(
 		assertThat(binaryFile.readText())
 			.contains("org.junit.platform.console.ConsoleLauncher")
 
-		val libDir = installDir.resolve("lib")
-		assertThat(libDir.list()).containsAtLeast(
-			"$name.jar",
-			"$name-tests.jar",
-		)
+		assertThat(runScript(binaryFile))
+			.contains("AddTest", "1 tests successful")
 	}
 
 	@Test fun junitPlatformPluginKotlinMpp() {
@@ -303,11 +268,8 @@ class TestDistributionPluginFixtureTest(
 		assertThat(binaryFile.readText())
 			.contains("org.junit.platform.console.ConsoleLauncher")
 
-		val libDir = installDir.resolve("lib")
-		assertThat(libDir.list()).containsAtLeast(
-			"$name-jvm.jar",
-			"$name-jvm-test.jar",
-		)
+		assertThat(runScript(binaryFile))
+			.contains("AddTest", "SubTest", "2 tests successful")
 	}
 
 	private fun createRunner(fixtureDir: File, vararg tasks: String): GradleRunner {
@@ -332,6 +294,24 @@ class TestDistributionPluginFixtureTest(
 				VALIDATE_KOTLIN_METADATA,
 			)
 			.forwardOutput()
+	}
+
+	private fun runScript(script: File): String {
+		val commands = if (System.getProperty("os.name").startsWith("Windows")) {
+			listOf("cmd.exe", "/d", "/c", "${script.name}.bat")
+		} else {
+			listOf(script.absolutePath)
+		}
+
+		val process = ProcessBuilder(commands)
+			.directory(script.parentFile)
+			.redirectErrorStream(true)
+			.apply { environment()["JAVA_HOME"] = System.getProperty("java.home") }
+			.start()
+
+		val output = process.inputReader().use(BufferedReader::readText).also(::println)
+		assertThat(process.waitFor()).isZero()
+		return output
 	}
 
 	private fun Assert<BuildTask?>.isSuccess() = isNotNull()
