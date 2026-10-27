@@ -217,7 +217,8 @@ class TestDistributionPluginFixtureTest(
 	}
 
 	@Ignore("Not currently working")
-	@Test fun junit4PluginTestsInLibrary() {
+	@Test
+	fun junit4PluginTestsInLibrary() {
 		val name = "junit4-plugin-tests-in-library"
 		val fixtureDir = File(fixturesDir, name)
 		val buildResult = createRunner(fixtureDir, "installTestDistribution").build()
