@@ -16,6 +16,7 @@ import java.io.File
 import org.gradle.testkit.runner.BuildTask
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome
+import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -215,6 +216,26 @@ class TestDistributionPluginFixtureTest(
 		// TODO We should build Android as well.
 	}
 
+	@Ignore("Not currently working")
+	@Test
+	fun junit4PluginTestsInLibrary() {
+		val name = "junit4-plugin-tests-in-library"
+		val fixtureDir = File(fixturesDir, name)
+		val buildResult = createRunner(fixtureDir, "installTestDistribution").build()
+
+		assertThat(buildResult.task(":installTestDistribution")).isSuccess()
+
+		val installDir = fixtureDir.resolve("build/install/test")
+		assertThat(installDir).isDirectory()
+
+		val binaryFile = installDir.resolve("bin/$name-test")
+		assertThat(binaryFile.readText())
+			.contains("""org.junit.runner.JUnitCore "com.example.AddTest" "com.example.lib.PlusTest"""")
+
+		assertThat(runScript(binaryFile))
+			.contains("OK (2 tests)")
+	}
+
 	@Test fun junitPlatformPluginAndroidLibrary() {
 		val name = "junitPlatform-plugin-android-library"
 		val fixtureDir = File(fixturesDir, name)
@@ -270,6 +291,25 @@ class TestDistributionPluginFixtureTest(
 
 		assertThat(runScript(binaryFile))
 			.contains("AddTest", "SubTest", "2 tests successful")
+	}
+
+	@Test fun junitPlatformPluginTestsInLibrary() {
+		val name = "junitPlatform-plugin-tests-in-library"
+		val fixtureDir = File(fixturesDir, name)
+		val buildResult = createRunner(fixtureDir, "installTestDistribution").build()
+
+		assertThat(buildResult.task(":test")).isNull()
+		assertThat(buildResult.task(":installTestDistribution")).isSuccess()
+
+		val installDir = fixtureDir.resolve("build/install/test")
+		assertThat(installDir).isDirectory()
+
+		val binaryFile = installDir.resolve("bin/$name-test")
+		assertThat(binaryFile.readText())
+			.contains("org.junit.platform.console.ConsoleLauncher")
+
+		assertThat(runScript(binaryFile))
+			.contains("AddTest", "PlusTest", "2 tests successful")
 	}
 
 	private fun createRunner(fixtureDir: File, vararg tasks: String): GradleRunner {
