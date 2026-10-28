@@ -315,7 +315,10 @@ class TestDistributionPluginFixtureTest(
 
 		val binaryFile = installDir.resolve("bin/$name-test")
 		assertThat(binaryFile.readText())
-			.contains("org.junit.platform.console.ConsoleLauncher")
+			.contains(
+				"org.junit.platform.console.ConsoleLauncher",
+				$$"""--scan-classpath "$APP_HOME/lib/$$name-tests.jar"""",
+			)
 
 		assertThat(runScript(binaryFile))
 			.contains("AddTest", "PlusTest", "2 tests successful")

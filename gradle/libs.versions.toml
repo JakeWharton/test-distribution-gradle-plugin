@@ -22,6 +22,7 @@ junit4 = "junit:junit:4.13.2"
 
 junitJupiter-engine = "org.junit.jupiter:junit-jupiter-engine:5.14.4"
 junitPlatform-console = "org.junit.platform:junit-platform-console:1.14.4"
+junitPlatform-suite = "org.junit.platform:junit-platform-suite:1.14.4"
 
 assertk = "com.willowtreeapps.assertk:assertk:0.28.1"
 testParameterInjector = "com.google.testparameterinjector:test-parameter-injector:1.25"
