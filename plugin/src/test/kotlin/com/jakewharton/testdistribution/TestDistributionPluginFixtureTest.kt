@@ -321,7 +321,7 @@ class TestDistributionPluginFixtureTest(
 			)
 
 		assertThat(runScript(binaryFile))
-			.contains("AddTest", "PlusTest", "2 tests successful")
+			.contains("AddTest", "operator()", "simple()", "2 tests successful")
 	}
 
 	private fun createRunner(fixtureDir: File, vararg tasks: String): GradleRunner {
