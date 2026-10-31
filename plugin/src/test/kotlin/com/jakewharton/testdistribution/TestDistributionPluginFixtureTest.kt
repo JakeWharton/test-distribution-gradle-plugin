@@ -249,7 +249,10 @@ class TestDistributionPluginFixtureTest(
 
 		val binaryFile = installDir.resolve("bin/$name-test")
 		assertThat(binaryFile.readText())
-			.contains("org.junit.platform.console.ConsoleLauncher")
+			.contains(
+				"org.junit.platform.console.ConsoleLauncher",
+				$$"""--scan-classpath "$APP_HOME/lib/$$name-debug-unitTest.jar"""",
+			)
 
 		assertThat(runScript(binaryFile))
 			.contains("AddTest", "1 tests successful")
@@ -268,7 +271,10 @@ class TestDistributionPluginFixtureTest(
 
 		val binaryFile = installDir.resolve("bin/$name-test")
 		assertThat(binaryFile.readText())
-			.contains("org.junit.platform.console.ConsoleLauncher")
+			.contains(
+				"org.junit.platform.console.ConsoleLauncher",
+				$$"""--scan-classpath "$APP_HOME/lib/$$name-tests.jar"""",
+			)
 
 		assertThat(runScript(binaryFile))
 			.contains("AddTest", "1 tests successful")
@@ -287,7 +293,10 @@ class TestDistributionPluginFixtureTest(
 
 		val binaryFile = installDir.resolve("bin/$name-test")
 		assertThat(binaryFile.readText())
-			.contains("org.junit.platform.console.ConsoleLauncher")
+			.contains(
+				"org.junit.platform.console.ConsoleLauncher",
+				$$"""--scan-classpath "$APP_HOME/lib/$$name-jvm-test.jar"""",
+			)
 
 		assertThat(runScript(binaryFile))
 			.contains("AddTest", "SubTest", "2 tests successful")
@@ -306,10 +315,13 @@ class TestDistributionPluginFixtureTest(
 
 		val binaryFile = installDir.resolve("bin/$name-test")
 		assertThat(binaryFile.readText())
-			.contains("org.junit.platform.console.ConsoleLauncher")
+			.contains(
+				"org.junit.platform.console.ConsoleLauncher",
+				$$"""--scan-classpath "$APP_HOME/lib/$$name-tests.jar"""",
+			)
 
 		assertThat(runScript(binaryFile))
-			.contains("AddTest", "PlusTest", "2 tests successful")
+			.contains("AddTest", "operator()", "simple()", "2 tests successful")
 	}
 
 	private fun createRunner(fixtureDir: File, vararg tasks: String): GradleRunner {
