@@ -48,16 +48,22 @@ internal fun computeMain(
 				}
 			}
 
-			TestFramework.JunitPlatform -> testJarProvider.flatMap(Jar::getArchiveFileName)
-				.map { fileName ->
+			TestFramework.JunitPlatform -> {
+				testJarProvider.flatMap(Jar::getArchiveFileName).zip(testJars.elements) { testClassesJar, testJarLocations ->
 					buildList {
 						add("org.junit.platform.console.ConsoleLauncher")
 						add("execute")
 						add("--disable-banner")
 						add("--scan-classpath")
-						add(""""$APP_HOME_MARKER/lib/$fileName"""")
+						add("--classpath")
+						add(""""$APP_HOME_MARKER/lib/$testClassesJar"""")
+						for (testJarLocation in testJarLocations) {
+							add("--classpath")
+							add(""""$APP_HOME_MARKER/lib/${testJarLocation.asFile.name}"""")
+						}
 					}.joinToString(separator = " ")
 				}
+			}
 		}
 	}
 }

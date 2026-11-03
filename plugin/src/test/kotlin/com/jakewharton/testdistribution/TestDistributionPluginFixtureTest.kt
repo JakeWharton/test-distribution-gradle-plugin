@@ -251,7 +251,7 @@ class TestDistributionPluginFixtureTest(
 		assertThat(binaryFile.readText())
 			.contains(
 				"org.junit.platform.console.ConsoleLauncher",
-				$$"""--scan-classpath "$APP_HOME/lib/$$name-debug-unitTest.jar"""",
+				$$"""--classpath "$APP_HOME/lib/$$name-debug-unitTest.jar"""",
 			)
 
 		assertThat(runScript(binaryFile))
@@ -273,7 +273,7 @@ class TestDistributionPluginFixtureTest(
 		assertThat(binaryFile.readText())
 			.contains(
 				"org.junit.platform.console.ConsoleLauncher",
-				$$"""--scan-classpath "$APP_HOME/lib/$$name-tests.jar"""",
+				$$"""--classpath "$APP_HOME/lib/$$name-tests.jar"""",
 			)
 
 		assertThat(runScript(binaryFile))
@@ -295,7 +295,7 @@ class TestDistributionPluginFixtureTest(
 		assertThat(binaryFile.readText())
 			.contains(
 				"org.junit.platform.console.ConsoleLauncher",
-				$$"""--scan-classpath "$APP_HOME/lib/$$name-jvm-test.jar"""",
+				$$"""--classpath "$APP_HOME/lib/$$name-jvm-test.jar"""",
 			)
 
 		assertThat(runScript(binaryFile))
@@ -317,11 +317,11 @@ class TestDistributionPluginFixtureTest(
 		assertThat(binaryFile.readText())
 			.contains(
 				"org.junit.platform.console.ConsoleLauncher",
-				$$"""--scan-classpath "$APP_HOME/lib/$$name-tests.jar"""",
+				$$"""--classpath "$APP_HOME/lib/$$name-tests.jar"""",
 			)
 
 		assertThat(runScript(binaryFile))
-			.contains("AddTest", "operator()", "simple()", "2 tests successful")
+			.contains("AddTest", "PlusTest", "2 tests successful")
 	}
 
 	private fun createRunner(fixtureDir: File, vararg tasks: String): GradleRunner {
