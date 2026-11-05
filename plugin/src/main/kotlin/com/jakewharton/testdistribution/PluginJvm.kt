@@ -143,7 +143,10 @@ private fun configureTasks(
 			.from(testJarProvider.map { it.outputs.files })
 			.from(testDependencies)
 
-		it.mainClass.set(computeMain(gradleSupport, testFrameworkProvider, testClasses, testDependencies))
+		it.unixStartScriptGenerator = it.unixStartScriptGenerator.decorateScript($$"$APP_HOME")
+		it.windowsStartScriptGenerator = it.windowsStartScriptGenerator.decorateScript("%APP_HOME%")
+
+		it.mainClass.set(computeMain(gradleSupport, testFrameworkProvider, testClasses, testDependencies, testJarProvider))
 	}
 
 	installProvider.configure {

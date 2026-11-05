@@ -9,8 +9,8 @@ import org.gradle.api.Project
 import org.gradle.api.plugins.BasePluginExtension
 import org.gradle.api.tasks.Sync
 import org.gradle.api.tasks.application.CreateStartScripts
+import org.gradle.api.tasks.bundling.Jar
 import org.gradle.api.tasks.bundling.Zip
-import org.gradle.jvm.tasks.Jar
 
 internal fun configureAndroidPlugin(project: Project, gradleSupport: GradleSupport) {
 	val agpVersion = AgpVersion.parse(ANDROID_GRADLE_PLUGIN_VERSION)
@@ -70,9 +70,12 @@ internal fun configureAndroidPlugin(project: Project, gradleSupport: GradleSuppo
 						.from(testJarProvider.map { it.outputs.files })
 						.from(testJars)
 
+					it.unixStartScriptGenerator = it.unixStartScriptGenerator.decorateScript($$"$APP_HOME")
+					it.windowsStartScriptGenerator = it.windowsStartScriptGenerator.decorateScript("%APP_HOME%")
+
 					androidSupport.withTestProvider(project, hostTest) { testTask ->
 						val testFramework = testTask.toTestFramework()
-						it.mainClass.set(computeMain(gradleSupport, testFramework, testClasses, testJars))
+						it.mainClass.set(computeMain(gradleSupport, testFramework, testClasses, testJars, testJarProvider))
 					}
 				}
 

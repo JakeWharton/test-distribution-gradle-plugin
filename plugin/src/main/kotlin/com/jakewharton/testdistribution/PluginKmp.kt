@@ -39,7 +39,10 @@ internal fun configureKotlinMultiplatformPlugin(project: Project, gradleSupport:
 					.from(testJarProvider.map { it.outputs.files })
 					.from(testDependencies)
 
-				it.mainClass.set(computeMain(gradleSupport, testFramework, testClasses, testDependencies))
+				it.unixStartScriptGenerator = it.unixStartScriptGenerator.decorateScript($$"$APP_HOME")
+				it.windowsStartScriptGenerator = it.windowsStartScriptGenerator.decorateScript("%APP_HOME%")
+
+				it.mainClass.set(computeMain(gradleSupport, testFramework, testClasses, testDependencies, testJarProvider))
 			}
 
 			val installProvider = project.tasks.register("install${nameUpper}Distribution", Sync::class.java) {
