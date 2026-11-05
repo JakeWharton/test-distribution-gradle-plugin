@@ -188,12 +188,11 @@ class TestDistributionPluginFixtureTest(
 		assertThat(libIntegrationInstallDir).isDirectory()
 
 		val libIntegrationBinaryFile = libIntegrationInstallDir.resolve("bin/$name-libIntegration")
-		// FIXME: Eager read is not resolving lib test class.
 		assertThat(libIntegrationBinaryFile.readText())
-			.contains("""org.junit.runner.JUnitCore "com.example.AddTest" "com.example.SubTest"""")
+			.contains("""org.junit.runner.JUnitCore "com.example.AddTest" "com.example.SubTest" "com.example.lib.PlusTest"""")
 
 		assertThat(runScript(libIntegrationBinaryFile))
-			.contains("OK (2 tests)")
+			.contains("OK (3 tests)")
 	}
 
 	@Test fun junit4PluginKotlinMppTargetName() {

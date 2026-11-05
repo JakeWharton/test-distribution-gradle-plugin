@@ -20,9 +20,10 @@ internal fun configureKotlinMultiplatformPlugin(project: Project, gradleSupport:
 			val name = target.name + testRun.name.replaceFirstChar(Char::uppercase)
 			val nameUpper = name.replaceFirstChar(Char::uppercase)
 
-			val testFramework = testRun.executionTask.toTestFramework()
-			val testClasses = testRun.executionSource.testClassesDirs
-			val testDependencies = testRun.executionSource.classpath.filter(File::isFile)
+			val testTask = testRun.executionTask
+			val testFramework = testTask.toTestFramework()
+			val testClasses = project.files(testTask.flatMap { it.testClassesDirs.elements })
+			val testDependencies = project.files(testTask.flatMap { it.classpath.filter(File::isFile).elements })
 
 			val testJarProvider = project.tasks.register("jar$nameUpper", Jar::class.java) {
 				it.from(testClasses)
