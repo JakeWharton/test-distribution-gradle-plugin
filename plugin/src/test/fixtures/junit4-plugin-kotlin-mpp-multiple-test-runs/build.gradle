@@ -21,6 +21,21 @@ apply plugin: 'com.jakewharton.test-distribution'
 kotlin {
 	jvm {
 		testRuns.create("integration")
+
+		compilations.create("lib") {
+			defaultSourceSet {
+				dependencies {
+					implementation(libs.kotlin.test.junit)
+				}
+			}
+
+			testRuns.create("libIntegration") {
+				setExecutionSourceFrom(
+					[compilations.main],
+					[compilations.lib, compilations.test],
+				)
+			}
+		}
 	}
 
 	linuxArm64()

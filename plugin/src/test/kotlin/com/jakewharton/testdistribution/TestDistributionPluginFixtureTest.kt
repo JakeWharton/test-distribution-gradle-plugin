@@ -150,12 +150,19 @@ class TestDistributionPluginFixtureTest(
 	@Test fun junit4PluginKotlinMppMultipleTestRuns() {
 		val name = "junit4-plugin-kotlin-mpp-multiple-test-runs"
 		val fixtureDir = File(fixturesDir, name)
-		val buildResult = createRunner(fixtureDir, "installJvmTestDistribution", "installJvmIntegrationDistribution").build()
+		val buildResult = createRunner(
+			fixtureDir,
+			"installJvmTestDistribution",
+			"installJvmIntegrationDistribution",
+			"installJvmLibIntegrationDistribution",
+		).build()
 
 		assertThat(buildResult.task(":jvmTest")).isNull()
 		assertThat(buildResult.task(":jvmIntegration")).isNull()
+		assertThat(buildResult.task(":jvmLibIntegration")).isNull()
 		assertThat(buildResult.task(":installJvmTestDistribution")).isSuccess()
 		assertThat(buildResult.task(":installJvmIntegrationDistribution")).isSuccess()
+		assertThat(buildResult.task(":installJvmLibIntegrationDistribution")).isSuccess()
 
 		val testInstallDir = fixtureDir.resolve("build/install/jvmTest")
 		assertThat(testInstallDir).isDirectory()
@@ -175,6 +182,17 @@ class TestDistributionPluginFixtureTest(
 			.contains("""org.junit.runner.JUnitCore "com.example.AddTest"""")
 
 		assertThat(runScript(integrationBinaryFile))
+			.contains("OK (2 tests)")
+
+		val libIntegrationInstallDir = fixtureDir.resolve("build/install/jvmLibIntegration")
+		assertThat(libIntegrationInstallDir).isDirectory()
+
+		val libIntegrationBinaryFile = libIntegrationInstallDir.resolve("bin/$name-libIntegration")
+		// FIXME: Eager read is not resolving lib test class.
+		assertThat(libIntegrationBinaryFile.readText())
+			.contains("""org.junit.runner.JUnitCore "com.example.AddTest" "com.example.SubTest"""")
+
+		assertThat(runScript(libIntegrationBinaryFile))
 			.contains("OK (2 tests)")
 	}
 
